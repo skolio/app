@@ -8,4 +8,10 @@ class UserModel {
     username = data["username"];
     email = data["email"];
   }
+
+  Map<String, dynamic> get asMap => {
+        "uid": uid,
+        "username": username,
+        "email": email,
+      };
 }

@@ -1,0 +1,3 @@
+class SharedProvider {
+  fetchHistory() {}
+}

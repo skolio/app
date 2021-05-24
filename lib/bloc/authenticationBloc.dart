@@ -3,20 +3,66 @@ import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/userModel.dart';
 import 'package:skolio/provider/fireProvider.dart';
 
+import '../model/responseModel.dart';
+
 class AuthenticationBloc {
   final _fireProvider = FireProvider();
   final _userFetcher = BehaviorSubject();
 
   ValueStream get currentUser => _userFetcher.stream;
 
-  initUser() async {}
+  initUser() async {
+    final response = await _fireProvider.initUser();
+
+    if (response.code == "200") {
+      _userFetcher.sink.add(response.arguments["userModel"]);
+    } else {
+      _userFetcher.sink.add(null);
+    }
+  }
 
   Future<ResponseModel> loginUser(String email, String password) async {
-    final response = _fireProvider.loginUser(email, password);
+    final response = await _fireProvider.loginUser(email, password);
+
+    if (response.code == "200") {
+      _userFetcher.sink.add(response.arguments["userModel"]);
+      return ResponseModel("200");
+    } else
+      return response;
   }
 
   Future<ResponseModel> registerUser(
-      UserModel userModel, String password) async {}
+      UserModel userModel, String password) async {
+    final response = await _fireProvider.registerUser(userModel, password);
+
+    if (response.code == "200") {
+      _userFetcher.sink.add(response.arguments["userModel"]);
+      return ResponseModel("200");
+    } else
+      return response;
+  }
+
+  Future<ResponseModel> changeEmail(
+      String email, String newEmail, String password) async {
+    final response = await _fireProvider.changeEmail(email, newEmail, password);
+
+    if (response.code == "200") {
+      UserModel userModel = _userFetcher.value;
+      userModel.email = newEmail;
+      _userFetcher.sink.add(userModel);
+      return ResponseModel("200");
+    } else
+      return response;
+  }
+
+  Future<ResponseModel> changePassword(
+          String email, String password, String newPassword) async =>
+      _fireProvider.changePassword(email, password, newPassword);
+
+  signOutUser() {
+    _userFetcher.sink.add(null);
+    _fireProvider.signOut();
+  }
 
   dispose() {
     _userFetcher.close();

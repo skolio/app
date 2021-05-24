@@ -34,6 +34,7 @@ class _OwnTextFieldState extends State<OwnTextField> {
         children: [
           Expanded(
             child: TextField(
+              controller: widget.controller,
               obscureText: widget.obscureText,
               decoration: InputDecoration(
                 border: InputBorder.none,
