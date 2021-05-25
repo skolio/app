@@ -10,6 +10,8 @@ class TrainingBloc {
     _trainingListFetcher.sink.add([]);
   }
 
+  addOwnTraining() {}
+
   dispose() {
     _trainingListFetcher.close();
   }

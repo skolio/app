@@ -190,4 +190,10 @@ class FireProvider {
   signOut() {
     _auth.signOut();
   }
+
+  //* TrainingMethods
+
+  Future<ResponseModel> fetchTrainingList() async {}
+
+  Future<ResponseModel> fetchTrainingPlan() async {}
 }

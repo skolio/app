@@ -4,7 +4,6 @@ import 'package:skolio/screens/authentication/startScreen.dart';
 import 'package:skolio/screens/loadingScreen.dart';
 
 import 'bloc/authenticationBloc.dart';
-import 'bloc/authenticationBloc.dart';
 import 'screens/mainScreen.dart';
 
 void main() {
