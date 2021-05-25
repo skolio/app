@@ -1,4 +1,5 @@
 class TrainingModel {
+  String id;
   String title;
   String description;
   List<String> imageURLs;
@@ -7,6 +8,7 @@ class TrainingModel {
   Duration timeDuration;
 
   TrainingModel(Map data) {
+    id = data["id"];
     title = data["title"];
     description = data["description"];
     imageURLs = List<String>.from(data["imageURLs"]);
@@ -15,7 +17,8 @@ class TrainingModel {
     timeDuration = parseDuration(data["duration"]);
   }
 
-  Map<String, dynamic> get asMap => {
+  Map get asMap => {
+        "id": id,
         "title": title,
         "description": description,
         "imageURLs": imageURLs,

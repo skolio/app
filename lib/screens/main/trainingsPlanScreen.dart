@@ -11,6 +11,7 @@ class TrainingsPlanScreen extends StatefulWidget {
 class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
   final testTraining1 = TrainingModel(
     {
+      "id": "1",
       "title": "Test Übung 1",
       "description": "- TestTeil 1\n"
           "- TestTeil 2\n"
@@ -31,6 +32,7 @@ class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
   );
   final testTraining2 = TrainingModel(
     {
+      "id": "1",
       "title": "Test Übung 2",
       "description": "- TestTeil 2.1\n"
           "- TestTeil 2.2\n"

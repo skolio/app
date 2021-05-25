@@ -194,6 +194,4 @@ class FireProvider {
   //* TrainingMethods
 
   Future<ResponseModel> fetchTrainingList() async {}
-
-  Future<ResponseModel> fetchTrainingPlan() async {}
 }

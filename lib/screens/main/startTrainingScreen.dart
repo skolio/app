@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/widgets/main/trainingItem.dart';
@@ -11,6 +12,7 @@ class StartTrainingScreen extends StatefulWidget {
 class _StartTrainingScreenState extends State<StartTrainingScreen> {
   final testTraining1 = TrainingModel(
     {
+      "id": "1",
       "title": "Test Übung 1",
       "description": "- TestTeil 1\n"
           "- TestTeil 2\n"
@@ -31,6 +33,7 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
   );
   final testTraining2 = TrainingModel(
     {
+      "id": "2",
       "title": "Test Übung 2",
       "description": "- TestTeil 2.1\n"
           "- TestTeil 2.2\n"
@@ -45,7 +48,7 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: trainingBloc.trainingList,
+      stream: authenticationBloc.currentUser,
       builder: (context, snapshot) => snapshot.data == null
           ? Center(
               child: CircularProgressIndicator(

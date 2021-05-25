@@ -19,7 +19,30 @@ class SharedProvider {
     }
   }
 
-  Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {}
+  Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
+    final sharedPref = await SharedPreferences.getInstance();
+
+    final result = sharedPref.getStringList("TrainingList");
+
+    if (result == null) {
+      await sharedPref.setStringList("TrainingList", [
+        jsonEncode(trainingModel.asMap),
+      ]);
+
+      return ResponseModel("200");
+    } else {
+      List<Map> trainingModels = result.map((e) => jsonDecode(e)).toList();
+
+      trainingModels.add(trainingModel.asMap);
+
+      await sharedPref.setStringList(
+        "TrainingList",
+        trainingModels.map((e) => jsonEncode(e)).toList(),
+      );
+
+      return ResponseModel("200");
+    }
+  }
 
   fetchHistory() {}
 }

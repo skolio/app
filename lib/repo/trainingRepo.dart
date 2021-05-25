@@ -24,5 +24,26 @@ class TrainingRepo {
     //Just return one TrainingModel, the plan will be saved within the UserModel
   }
 
-  Future<ResponseModel> addOwnTraining() async {}
+  Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
+    final response = await _sharedProvider.addOwnTraining(trainingModel);
+
+    if (response.code == "200") {
+      trainingList.add(trainingModel);
+      return ResponseModel("200");
+    }
+    return response;
+  }
+
+  List<TrainingModel> addTrainingToPlan(String trainingID) {
+    trainingPlan
+        .add(trainingList.firstWhere((element) => element.id == trainingID));
+
+    return trainingPlan;
+  }
+
+  List<TrainingModel> removeTrainingFromPlan(String trainingID) {
+    trainingPlan.removeWhere((element) => element.id == trainingID);
+
+    return trainingPlan;
+  }
 }
