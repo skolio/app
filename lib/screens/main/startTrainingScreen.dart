@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/screens/main/exerciseScreens/trainingLoadingScreen.dart';
+import 'package:skolio/screens/main/exerciseScreens/trainingScreen.dart';
 import 'package:skolio/widgets/main/trainingItem.dart';
 
 class StartTrainingScreen extends StatefulWidget {
@@ -10,7 +12,7 @@ class StartTrainingScreen extends StatefulWidget {
 }
 
 class _StartTrainingScreenState extends State<StartTrainingScreen> {
-  final testTraining1 = TrainingModel(
+  final testTraining1 = TrainingModel.fromMap(
     {
       "id": "1",
       "title": "Test Übung 1",
@@ -31,7 +33,7 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
       "duration": Duration(seconds: 30).toString(),
     },
   );
-  final testTraining2 = TrainingModel(
+  final testTraining2 = TrainingModel.fromMap(
     {
       "id": "2",
       "title": "Test Übung 2",
@@ -58,26 +60,35 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
             )
           : Stack(
               children: [
-                ListView.builder(
-                  itemCount: 2,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                      top: 20,
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: TrainingListItem(
-                      testTraining1,
-                      Container(
-                        margin: EdgeInsets.all(10),
-                        child: Text(
-                          (index + 1).toString(),
-                          style: TextStyle(fontSize: 18),
-                        ),
+                snapshot.data.trainingPlan == 0
+                    ? Center(
+                        child: Text("There is nothing now"),
+                      )
+                    : ListView.builder(
+                        itemCount: snapshot.data.trainingPlan.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: 20,
+                              left: 20,
+                              right: 20,
+                            ),
+                            child: TrainingListItem(
+                              trainingBloc.fetchTrainingModel(
+                                snapshot.data.trainingPlan[index],
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: Text(
+                                  (index + 1).toString(),
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                              Container(),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -92,7 +103,21 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
                         style: TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
-                        print("Something is going on here");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FutureBuilder(
+                              future: () async {
+                                await Future.delayed(Duration(seconds: 2));
+                                return "Finished";
+                              }(),
+                              builder: (context, snapshot) =>
+                                  snapshot.data == null
+                                      ? TrainingLoadingScreen()
+                                      : TrainingScreen(),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),

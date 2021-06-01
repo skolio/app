@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/screens/main/newTrainingScreen.dart';
 import 'package:skolio/widgets/main/trainingItem.dart';
@@ -9,7 +10,7 @@ class TrainingsPlanScreen extends StatefulWidget {
 }
 
 class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
-  final testTraining1 = TrainingModel(
+  final testTraining1 = TrainingModel.fromMap(
     {
       "id": "1",
       "title": "Test Übung 1",
@@ -30,7 +31,7 @@ class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
       "duration": Duration(seconds: 30).toString(),
     },
   );
-  final testTraining2 = TrainingModel(
+  final testTraining2 = TrainingModel.fromMap(
     {
       "id": "1",
       "title": "Test Übung 2",
@@ -53,22 +54,43 @@ class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
             left: MediaQuery.of(context).size.width * 0.05,
             right: MediaQuery.of(context).size.width * 0.05,
           ),
-          child: ListView(
-            children: [
-              SizedBox(height: 15),
-              Text(
-                "Wähle die Übungen für deinen individuellen Trainingsplan aus!",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[800],
-                ),
-              ),
-              SizedBox(height: 15),
-              TrainingListItem(testTraining1, null),
-              SizedBox(height: 20),
-              TrainingListItem(testTraining2, null),
-              SizedBox(height: 20),
-            ],
+          child: StreamBuilder(
+            stream: trainingBloc.trainingList,
+            builder: (context, snapshot) => snapshot.data == null
+                ? Center(child: CircularProgressIndicator())
+                : snapshot.data.length == 0
+                    ? Center(
+                        child: Text(
+                            "Es gibt noch keine Trainingsübungen zum auswählen"))
+                    : ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) => Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: TrainingListItem(
+                            snapshot.data[index],
+                            null,
+                            null,
+                          ),
+                        ),
+                      ),
+
+            // builder: (context, snapshot) => ListView(
+            //   children: [
+            //     SizedBox(height: 15),
+            //     Text(
+            //       "Wähle die Übungen für deinen individuellen Trainingsplan aus!",
+            //       style: TextStyle(
+            //         fontSize: 18,
+            //         color: Colors.grey[800],
+            //       ),
+            //     ),
+            //     SizedBox(height: 15),
+            //     TrainingListItem(testTraining1, null),
+            //     SizedBox(height: 20),
+            //     TrainingListItem(testTraining2, null),
+            //     SizedBox(height: 20),
+            //   ],
+            // ),
           ),
         ),
         Align(

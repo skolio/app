@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/screens/main/trainingInfoScreen.dart';
 
 class TrainingListItem extends StatefulWidget {
   final TrainingModel trainingModel;
   final Widget leftItem;
+  final Widget actionButton;
 
-  TrainingListItem(this.trainingModel, this.leftItem);
+  TrainingListItem(this.trainingModel, this.leftItem, this.actionButton);
 
   @override
   _TrainingListItemState createState() => _TrainingListItemState();
@@ -14,6 +16,16 @@ class TrainingListItem extends StatefulWidget {
 
 class _TrainingListItemState extends State<TrainingListItem> {
   bool _checkBoxValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.trainingModel.id);
+    print(widget.trainingModel == null);
+    _checkBoxValue = authenticationBloc.currentUser.value.trainingPlan.contains(
+      widget.trainingModel.id,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +44,10 @@ class _TrainingListItemState extends State<TrainingListItem> {
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(widget.trainingModel.imageURLs.first),
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -52,6 +68,14 @@ class _TrainingListItemState extends State<TrainingListItem> {
                           onChanged: (newValue) {
                             setState(() {
                               _checkBoxValue = !_checkBoxValue;
+                              if (_checkBoxValue) {
+                                authenticationBloc
+                                    .addTrainingToPlan(widget.trainingModel.id);
+                              } else {
+                                authenticationBloc.removeTrainingFromPlan(
+                                  widget.trainingModel.id,
+                                );
+                              }
                             });
                           },
                         )

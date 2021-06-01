@@ -13,23 +13,33 @@ class TrainingRepo {
   Future<ResponseModel> fetchTrainingList() async {
     final fireResponse = await _fireProvider.fetchTrainingList();
 
-    //Check if 200 and add it to the list
+    if (fireResponse.code == "200") {
+      trainingList.addAll(
+        List<TrainingModel>.from(
+          fireResponse.arguments["trainingList"]
+              .map((e) => TrainingModel.fromMap(e))
+              .toList(),
+        ),
+      );
 
-    final sharedResponse = await _sharedProvider.fetchTrainingList();
-
-    //Check if 200 and add it to the list
+      return ResponseModel("200", arguments: {
+        "trainingList": trainingList,
+      });
+    } else
+      return ResponseModel("404");
   }
 
-  TrainingModel fetchTrainingModel(String id) {
-    //Just return one TrainingModel, the plan will be saved within the UserModel
-  }
+  TrainingModel fetchTrainingModel(String id) =>
+      trainingList.firstWhere((element) => element.id == id);
 
   Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
-    final response = await _sharedProvider.addOwnTraining(trainingModel);
+    final response = await _fireProvider.addOwnTraining(trainingModel);
 
     if (response.code == "200") {
       trainingList.add(trainingModel);
-      return ResponseModel("200");
+      return ResponseModel("200", arguments: {
+        "trainingList": trainingList,
+      });
     }
     return response;
   }

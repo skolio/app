@@ -88,6 +88,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 20,
                     width: 20,
                     child: Checkbox(
+                      activeColor: Theme.of(context).primaryColor,
                       value: _checkBoxValue,
                       onChanged: (newValue) {
                         setState(() {
@@ -165,6 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           "email": _emailController.text,
           "username": _nameController.text,
           "uid": "",
+          "trainingPlan": "",
         },
       ),
       _passwordController.text,

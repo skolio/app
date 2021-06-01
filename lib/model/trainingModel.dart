@@ -7,7 +7,7 @@ class TrainingModel {
   int sets;
   Duration timeDuration;
 
-  TrainingModel(Map data) {
+  TrainingModel.fromMap(Map data) {
     id = data["id"];
     title = data["title"];
     description = data["description"];
@@ -17,7 +17,7 @@ class TrainingModel {
     timeDuration = parseDuration(data["duration"]);
   }
 
-  Map get asMap => {
+  Map<String, dynamic> get asMap => {
         "id": id,
         "title": title,
         "description": description,

@@ -1,10 +1,12 @@
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
+import 'package:skolio/bloc/trainingBloc.dart';
+import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/widgets/authentication/loadingDialog.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 
 class NewTrainingScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
 
   int setCount = 0;
   String duration = "00:00";
+  List<TextEditingController> imageTitles = [];
 
   List<String> images = [];
 
@@ -66,19 +69,75 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                     enlargeCenterPage: true,
                     height: MediaQuery.of(context).size.height * 0.4,
                   ),
-                  items: List<Widget>.from(images
-                      .map(
-                        (e) => Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: FileImage(File(e)),
+                  items: List<Widget>.from(images.map(
+                    (e) {
+                      int index = images.indexOf(e);
+
+                      return Container(
+                        margin: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(File(e)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      images.removeAt(index);
+                                      imageTitles.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 2,
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                            spreadRadius: 2,
+                                          ),
+                                        ],
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.clear,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: TextField(
+                                controller: imageTitles[index],
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  hintText: "Bildtitel",
+                                  isDense: true,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                      .toList())
+                      );
+                    },
+                  ).toList())
                     ..add(
                       InkWell(
                         onTap: onTapAddImage,
@@ -201,7 +260,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
     );
   }
 
-  onTapSave() {
+  onTapSave() async {
     FocusScope.of(context).unfocus();
     if (_nameController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
@@ -213,6 +272,35 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
       );
       return;
     }
+
+    TrainingModel trainingModel = TrainingModel.fromMap(
+      {
+        "id": "",
+        "title": _nameController.text,
+        "description": _descriptionController.text,
+        "imageURLs": images,
+        "imageTitle": imageTitles.map((e) => e.text).toList(),
+        "sets": setCount,
+        "duration": "00:" + duration,
+      },
+    );
+
+    showDialog(context: context, builder: (context) => LoadingDialog());
+
+    final response = await trainingBloc.addOwnTraining(trainingModel);
+
+    Navigator.pop(context);
+
+    if (response.code == "200") {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        getSnackBar(
+          context,
+          "Es ist ein Fehler aufgetreten bitte versuchen Sie es später erneut",
+        ),
+      );
+    }
   }
 
   onTapAddImage() async {
@@ -220,10 +308,15 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.image,
+      allowCompression: true,
     );
 
     if (result != null) {
+      imageTitles.clear();
       images = result.files.map((e) => e.path).toList();
+      for (int i = 0; i < images.length; i++) {
+        imageTitles.add(TextEditingController());
+      }
       setState(() {});
       print("Something should be going on here");
     }

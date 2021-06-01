@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:skolio/model/responseModel.dart';
+import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/model/userModel.dart';
 import '../model/responseModel.dart';
 
 class FireProvider {
   final _auth = FirebaseAuth.instance;
   final _store = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
 
   //* AuthenticationMethods
 
@@ -193,5 +198,79 @@ class FireProvider {
 
   //* TrainingMethods
 
-  Future<ResponseModel> fetchTrainingList() async {}
+  Future<ResponseModel> fetchTrainingList() async {
+    final trainingListResult = await _store.collection("Training").get();
+    final ownTrainingListResult = await _store
+        .collection("OwnTraining")
+        .where("uid", isEqualTo: _auth.currentUser.uid)
+        .get();
+
+    print("Something should be fetched here nothing more");
+
+    List<Map> returnList = [];
+
+    if (trainingListResult.size != 0)
+      returnList.addAll(trainingListResult.docs.map((e) => e.data()).toList());
+
+    if (ownTrainingListResult.size != 0) {
+      returnList
+          .addAll(ownTrainingListResult.docs.map((e) => e.data()).toList());
+    }
+
+    print(ownTrainingListResult.size);
+
+    print(returnList.length);
+
+    if (returnList.length == 0) {
+      return ResponseModel("404");
+    } else
+      return ResponseModel("200", arguments: {
+        "trainingList": returnList,
+      });
+  }
+
+  Future<ResponseModel> addOwnTraining(TrainingModel ownTrainingModel) async {
+    List<String> imageURLs = [];
+
+    for (int i = 0; i < ownTrainingModel.imageURLs.length; i++) {
+      imageURLs.add(await uploadFile(ownTrainingModel.imageURLs[i]));
+    }
+
+    final trainingDoc = _store.collection("OwnTraining").doc();
+    ownTrainingModel.imageURLs = imageURLs;
+    ownTrainingModel.id = trainingDoc.id;
+
+    await trainingDoc.set(ownTrainingModel.asMap);
+    await trainingDoc.update({"uid": _auth.currentUser.uid});
+
+    return ResponseModel("200");
+  }
+
+  addTrainingToPlan(String trainingID) {
+    _store.collection("Users").doc(_auth.currentUser.uid).update(
+      {
+        "trainingPlan": FieldValue.arrayUnion([trainingID]),
+      },
+    );
+  }
+
+  removeTrainingFromPlan(String trainingID) {
+    _store.collection("Users").doc(_auth.currentUser.uid).update({
+      "trainingPlan": FieldValue.arrayRemove([trainingID]),
+    });
+  }
+
+  //* StorageMethods
+  Future<String> uploadFile(String filePath) async {
+    final storageName =
+        DateTime.now().toString() + "§" + filePath.split("/").last;
+
+    final ref = _storage.ref().child(storageName);
+    final uploadTask = ref.putFile(File(filePath));
+    await uploadTask;
+
+    final url = await (await uploadTask).ref.getDownloadURL();
+
+    return url;
+  }
 }

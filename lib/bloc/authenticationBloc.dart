@@ -64,6 +64,20 @@ class AuthenticationBloc {
     _fireProvider.signOut();
   }
 
+  addTrainingToPlan(String trainingID) {
+    UserModel userModel = _userFetcher.value;
+    userModel.trainingPlan.add(trainingID);
+    _userFetcher.sink.add(userModel);
+    _fireProvider.addTrainingToPlan(trainingID);
+  }
+
+  removeTrainingFromPlan(String trainingID) {
+    UserModel userModel = _userFetcher.value;
+    userModel.trainingPlan.remove(trainingID);
+    _userFetcher.sink.add(userModel);
+    _fireProvider.removeTrainingFromPlan(trainingID);
+  }
+
   dispose() {
     _userFetcher.close();
   }

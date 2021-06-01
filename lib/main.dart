@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/screens/authentication/startScreen.dart';
 import 'package:skolio/screens/loadingScreen.dart';
 
@@ -44,7 +45,6 @@ class _MainAppState extends State<MainApp> {
   initAsync() async {
     await Firebase.initializeApp();
     await authenticationBloc.initUser();
-    await Future.delayed(Duration(seconds: 2));
-    return 0;
+    return "Done";
   }
 }
