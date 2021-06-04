@@ -3,12 +3,14 @@ class UserModel {
   String username;
   String email;
   List<String> trainingPlan;
+  Map statistic;
 
-  UserModel.fromMap(Map data) {
+  UserModel.fromMap(Map data, Map statistic) {
     uid = data["uid"];
     username = data["username"];
     email = data["email"];
     trainingPlan = List<String>.from(data["trainingPlan"]);
+    this.statistic = statistic;
   }
 
   Map<String, dynamic> get asMap => {

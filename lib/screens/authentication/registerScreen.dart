@@ -166,8 +166,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           "email": _emailController.text,
           "username": _nameController.text,
           "uid": "",
-          "trainingPlan": "",
+          "trainingPlan": [],
         },
+        {},
       ),
       _passwordController.text,
     );
@@ -177,7 +178,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (response.code == "200") {
       Navigator.pop(context);
     } else {
-      print("Something went wrong");
       ScaffoldMessenger.of(context).showSnackBar(
         getSnackBar(context, response.arguments["message"]),
       );

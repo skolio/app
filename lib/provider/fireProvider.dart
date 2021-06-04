@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,7 +16,6 @@ class FireProvider {
 
   Future<ResponseModel> initUser() async {
     if (_auth.currentUser == null) {
-      print("Noone is logge in currently");
     } else {
       final userDoc =
           await _store.collection("Users").doc(_auth.currentUser.uid).get();
@@ -28,10 +26,30 @@ class FireProvider {
         return ResponseModel("400");
       }
 
+      final statDocs = await _store
+          .collection("Users")
+          .doc(_auth.currentUser.uid)
+          .collection("Statistics")
+          .get();
+
+      print(statDocs.size);
+
+      Map statList = {};
+
+      print("This is stopping here");
+      statDocs.docs.forEach((element) {
+        print(element.data()["record"]);
+        statList[element.id] = element.data()["record"];
+      });
+
+      print("This is the statLists length");
+
+      print(statList.keys.length);
+
       return ResponseModel(
         "200",
         arguments: {
-          "userModel": UserModel.fromMap(userDoc.data()),
+          "userModel": UserModel.fromMap(userDoc.data(), statList),
         },
       );
     }
@@ -62,10 +80,22 @@ class FireProvider {
         });
       }
 
+      final statDocs = await _store
+          .collection("Users")
+          .doc(result.user.uid)
+          .collection("Statistics")
+          .get();
+
+      Map<String, List<String>> statList = {};
+
+      statDocs.docs.forEach((element) {
+        statList.putIfAbsent(element.id, () => element.data()["record"]);
+      });
+
       return ResponseModel(
         "200",
         arguments: {
-          "userModel": UserModel.fromMap(userDoc.data()),
+          "userModel": UserModel.fromMap(userDoc.data(), statList),
         },
       );
     } catch (e) {
@@ -205,8 +235,6 @@ class FireProvider {
         .where("uid", isEqualTo: _auth.currentUser.uid)
         .get();
 
-    print("Something should be fetched here nothing more");
-
     List<Map> returnList = [];
 
     if (trainingListResult.size != 0)
@@ -216,10 +244,6 @@ class FireProvider {
       returnList
           .addAll(ownTrainingListResult.docs.map((e) => e.data()).toList());
     }
-
-    print(ownTrainingListResult.size);
-
-    print(returnList.length);
 
     if (returnList.length == 0) {
       return ResponseModel("404");
@@ -257,6 +281,17 @@ class FireProvider {
   removeTrainingFromPlan(String trainingID) {
     _store.collection("Users").doc(_auth.currentUser.uid).update({
       "trainingPlan": FieldValue.arrayRemove([trainingID]),
+    });
+  }
+
+  addTrainingToStats(String id) async {
+    await _store
+        .collection("Users")
+        .doc(_auth.currentUser.uid)
+        .collection("Statistics")
+        .doc(DateTime.now().toString().split(" ").first)
+        .update({
+      "record": FieldValue.arrayUnion([id])
     });
   }
 

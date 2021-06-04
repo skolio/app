@@ -318,7 +318,6 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
         imageTitles.add(TextEditingController());
       }
       setState(() {});
-      print("Something should be going on here");
     }
   }
 

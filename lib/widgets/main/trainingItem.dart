@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
@@ -14,14 +15,13 @@ class TrainingListItem extends StatefulWidget {
   _TrainingListItemState createState() => _TrainingListItemState();
 }
 
-class _TrainingListItemState extends State<TrainingListItem> {
+class _TrainingListItemState extends State<TrainingListItem>
+    with AutomaticKeepAliveClientMixin {
   bool _checkBoxValue = false;
 
   @override
   void initState() {
     super.initState();
-    print(widget.trainingModel.id);
-    print(widget.trainingModel == null);
     _checkBoxValue = authenticationBloc.currentUser.value.trainingPlan.contains(
       widget.trainingModel.id,
     );
@@ -46,7 +46,8 @@ class _TrainingListItemState extends State<TrainingListItem> {
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: NetworkImage(widget.trainingModel.imageURLs.first),
+            image: CachedNetworkImageProvider(
+                widget.trainingModel.imageURLs.first),
           ),
         ),
         child: Column(
@@ -84,7 +85,7 @@ class _TrainingListItemState extends State<TrainingListItem> {
               ),
             ),
             Container(
-              height: 30,
+              height: 40,
               width: double.infinity,
               alignment: Alignment.centerRight,
               padding: EdgeInsets.only(right: 20),
@@ -98,6 +99,7 @@ class _TrainingListItemState extends State<TrainingListItem> {
               child: Text(
                 widget.trainingModel.title,
                 style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.end,
               ),
             ),
           ],
@@ -105,4 +107,7 @@ class _TrainingListItemState extends State<TrainingListItem> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

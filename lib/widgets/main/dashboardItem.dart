@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class DashboardItem extends StatefulWidget {
@@ -31,9 +32,10 @@ class _DashboardItemState extends State<DashboardItem> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Theme.of(context).primaryColor.withOpacity(0.3),
-          // image: DecorationImage(
-          //   image: NetworkImage(widget.imageURL),
-          // ),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: CachedNetworkImageProvider(widget.imageURL),
+          ),
         ),
         height: 150,
         padding: EdgeInsets.only(bottom: 20),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/model/trainingModel.dart';
@@ -42,20 +43,23 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(e),
+                                  image: CachedNetworkImageProvider(e),
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(height: 10),
-                          Text(
-                            widget.trainingModel.imageTitle[widget
-                                .trainingModel.imageURLs
-                                .indexWhere((element) => element == e)],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
+                          widget.trainingModel.imageTitle.length !=
+                                  widget.trainingModel.imageURLs.length
+                              ? Container()
+                              : Text(
+                                  widget.trainingModel.imageTitle[widget
+                                      .trainingModel.imageURLs
+                                      .indexWhere((element) => element == e)],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
                         ],
                       ),
                     )
@@ -103,7 +107,7 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(imageURL),
+                image: CachedNetworkImageProvider(imageURL),
               ),
             ),
           ),

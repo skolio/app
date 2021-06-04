@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.skolio">
    <application
-        android:label="skolio"
+        android:label="Skolio"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

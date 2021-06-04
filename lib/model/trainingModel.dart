@@ -5,7 +5,8 @@ class TrainingModel {
   List<String> imageURLs;
   List<String> imageTitle;
   int sets;
-  Duration timeDuration;
+  int repitions;
+  Duration pauseBetween;
 
   TrainingModel.fromMap(Map data) {
     id = data["id"];
@@ -14,7 +15,8 @@ class TrainingModel {
     imageURLs = List<String>.from(data["imageURLs"]);
     imageTitle = List<String>.from(data["imageTitle"]);
     sets = data["sets"];
-    timeDuration = parseDuration(data["duration"]);
+    repitions = data["repitions"];
+    pauseBetween = parseDuration(data["pauseBetween"]);
   }
 
   Map<String, dynamic> get asMap => {
@@ -24,7 +26,8 @@ class TrainingModel {
         "imageURLs": imageURLs,
         "imageTitle": imageTitle,
         "sets": sets,
-        "duration": timeDuration.toString(),
+        "repitions": repitions,
+        "pauseBetween": pauseBetween.toString(),
       };
 
   Duration parseDuration(String s) {

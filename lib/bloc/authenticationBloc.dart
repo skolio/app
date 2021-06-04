@@ -78,6 +78,21 @@ class AuthenticationBloc {
     _fireProvider.removeTrainingFromPlan(trainingID);
   }
 
+  addTrainingToStats(String id) async {
+    UserModel userModel = _userFetcher.value;
+    if (userModel.statistic[DateTime.now().toString().split(" ").first] !=
+        null) {
+      print("We are here but it doesnt want to work now");
+      userModel.statistic[DateTime.now().toString().split(" ").first].add(id);
+    } else {
+      userModel.statistic[DateTime.now().toString().split(" ")] = [id];
+    }
+    print("Here are some other things going on");
+    await _fireProvider.addTrainingToStats(id);
+    initUser();
+    _userFetcher.sink.add(userModel);
+  }
+
   dispose() {
     _userFetcher.close();
   }
