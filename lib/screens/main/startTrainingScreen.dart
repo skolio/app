@@ -6,6 +6,10 @@ import 'package:skolio/screens/main/exerciseScreens/trainingScreen.dart';
 import 'package:skolio/widgets/main/trainingItem.dart';
 
 class StartTrainingScreen extends StatefulWidget {
+  final Function(int) changeCurrentScreen;
+
+  StartTrainingScreen(this.changeCurrentScreen);
+
   @override
   _StartTrainingScreenState createState() => _StartTrainingScreenState();
 }
@@ -144,7 +148,7 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
                           }(),
                           builder: (context, snapshot) => snapshot.data == null
                               ? TrainingLoadingScreen()
-                              : TrainingScreen(),
+                              : TrainingScreen(widget.changeCurrentScreen),
                         ),
                       ),
                     );

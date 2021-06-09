@@ -10,6 +10,10 @@ import 'package:skolio/model/userModel.dart';
 import 'package:skolio/screens/main/exerciseScreens/trainingFinishedScreen.dart';
 
 class TrainingScreen extends StatefulWidget {
+  final Function(int) changeCurrentScreen;
+
+  TrainingScreen(this.changeCurrentScreen);
+
   @override
   _TrainingScreenState createState() => _TrainingScreenState();
 }
@@ -18,6 +22,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
   TrainingModel currentModel;
   int currentSet = 0;
   bool pause = false;
+  bool lastTraining = false;
   int pauseMinutes = 0;
   int pauseSeconds = 0;
   Timer timer;
@@ -68,7 +73,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
           if (snapshot.data == null)
             return Center(
               child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
+                valueColor:
+                    AlwaysStoppedAnimation(Theme.of(context).primaryColor),
               ),
             );
 
@@ -91,90 +97,101 @@ class _TrainingScreenState extends State<TrainingScreen> {
           TrainingModel trainingModel =
               trainingBloc.fetchTrainingModel(trainingPlan.first);
 
+          if (trainingPlan.length == 1) {
+            print("This is the last training session");
+            lastTraining = true;
+          }
+
           currentModel = trainingModel;
 
-          return Column(
-            children: [
-              SizedBox(height: 25),
-              Container(
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    enlargeCenterPage: true,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                  ),
-                  items: trainingModel.imageURLs
-                      .map(
-                        (e) => Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 20, right: 20),
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: CachedNetworkImageProvider(e),
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 25),
+                Container(
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      enableInfiniteScroll: false,
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      enlargeCenterPage: true,
+                      enlargeStrategy: CenterPageEnlargeStrategy.height,
+                    ),
+                    items: trainingModel.imageURLs
+                        .map(
+                          (e) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 20, right: 20),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: e.contains("https")
+                                          ? CachedNetworkImageProvider(e)
+                                          : AssetImage("assets/images/$e"),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            trainingModel.imageTitle.length !=
-                                    trainingModel.imageURLs.length
-                                ? Container()
-                                : Text(
-                                    trainingModel.imageTitle[trainingModel
-                                        .imageURLs
-                                        .indexWhere((element) => element == e)],
-                                    style: TextStyle(
-                                      fontSize: 20,
+                              SizedBox(height: 10),
+                              trainingModel.imageTitle.length !=
+                                      trainingModel.imageURLs.length
+                                  ? Container()
+                                  : Text(
+                                      trainingModel.imageTitle[
+                                          trainingModel.imageURLs.indexWhere(
+                                              (element) => element == e)],
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
                                     ),
-                                  ),
-                          ],
-                        ),
-                      )
-                      .toList(),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                child: Text(
-                  trainingModel.title,
-                  style: Theme.of(context).textTheme.headline5,
+                SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Text(
+                    trainingModel.title,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                margin: EdgeInsets.only(left: 30, right: 30),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Beschreibung",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(fontSize: 18),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        trainingModel.description,
-                        style: TextStyle(
-                          fontSize: 16,
+                SizedBox(height: 10),
+                Container(
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Beschreibung",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(fontSize: 18),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          trainingModel.description,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 50),
-              Expanded(
-                child: Container(
+                SizedBox(height: 20),
+                Container(
                   decoration: BoxDecoration(border: Border.all()),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -213,8 +230,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
                                         : pauseSeconds.toString()
                                     : trainingModel.repitions.toString(),
                                 style: TextStyle(
-                                  fontSize: pauseMinutes == 0 ? 40 : 50,
+                                  fontSize: pauseMinutes == 0 ? 25 : 35,
                                 ),
+                                maxLines: 1,
                               ),
                             ),
                           ),
@@ -237,8 +255,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -246,6 +264,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   onTapCancel() {
+    timer?.cancel();
     Navigator.pop(context);
   }
 
@@ -264,7 +283,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TrainingFinishedScreen(),
+          builder: (context) =>
+              TrainingFinishedScreen(lastTraining, widget.changeCurrentScreen),
         ),
       );
     } else {

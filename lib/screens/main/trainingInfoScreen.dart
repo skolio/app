@@ -28,6 +28,7 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
             Container(
               child: CarouselSlider(
                 options: CarouselOptions(
+                  enableInfiniteScroll: false,
                   height: MediaQuery.of(context).size.height * 0.5,
                   enlargeCenterPage: true,
                   enlargeStrategy: CenterPageEnlargeStrategy.height,
@@ -43,7 +44,9 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: CachedNetworkImageProvider(e),
+                                  image: e.contains("https")
+                                      ? CachedNetworkImageProvider(e)
+                                      : AssetImage("assets/images/$e"),
                                 ),
                               ),
                             ),

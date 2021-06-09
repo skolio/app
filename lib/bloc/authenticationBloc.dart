@@ -36,7 +36,6 @@ class AuthenticationBloc {
     final response = await _fireProvider.registerUser(userModel, password);
 
     if (response.code == "200") {
-      _userFetcher.sink.add(response.arguments["userModel"]);
       return ResponseModel("200");
     } else
       return response;

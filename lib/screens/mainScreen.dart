@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     _screens = [
       DashboardScreen(changeCurrentScreen),
       TrainingsPlanScreen(),
-      StartTrainingScreen(),
+      StartTrainingScreen(changeCurrentScreen),
       StatsScreen(),
       SettingScreen(),
       DataPrivacyScreen(),

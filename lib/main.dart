@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_http_request.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/screens/authentication/startScreen.dart';
 import 'package:skolio/screens/loadingScreen.dart';
@@ -9,7 +10,6 @@ import 'screens/mainScreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MainApp());
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skolio/screens/authentication/loginScreen.dart';
 import 'package:skolio/widgets/authentication/loadingDialog.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 import 'package:skolio/widgets/authentication/ownTextField.dart';
@@ -23,119 +24,118 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("REGISTRIERUNG"),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.4,
-              child: Image.asset("assets/Logo.png"),
-            ),
-            SizedBox(height: 40),
-            Container(
-              padding: EdgeInsets.only(
-                left: 30,
-                right: 30,
+      body: ListView(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: Image.asset("assets/Logo.png"),
               ),
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OwnTextField(
-                    hintTitle: "Name",
-                    obscureText: false,
-                    rightWidget: null,
-                    controller: _nameController,
-                  ),
-                  OwnTextField(
-                    hintTitle: "E-Mail",
-                    obscureText: false,
-                    rightWidget: null,
-                    controller: _emailController,
-                  ),
-                  OwnTextField(
-                    hintTitle: "Passwort",
-                    obscureText: _passwordObscureText,
-                    rightWidget: CupertinoButton(
-                      child: Icon(
-                        Icons.remove_red_eye_sharp,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordObscureText = !_passwordObscureText;
-                        });
-                      },
-                    ),
-                    controller: _passwordController,
-                  ),
-                ],
+              SizedBox(height: 40),
+              Container(
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: OwnTextField(
+                  hintTitle: "Name",
+                  obscureText: false,
+                  rightWidget: null,
+                  controller: _nameController,
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.only(left: 30, right: 30),
-              child: Row(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 20,
-                    child: Checkbox(
-                      activeColor: Theme.of(context).primaryColor,
-                      value: _checkBoxValue,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _checkBoxValue = !_checkBoxValue;
-                        });
-                      },
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: OwnTextField(
+                  hintTitle: "E-Mail",
+                  obscureText: false,
+                  rightWidget: null,
+                  controller: _emailController,
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: OwnTextField(
+                  hintTitle: "Passwort",
+                  obscureText: _passwordObscureText,
+                  rightWidget: CupertinoButton(
+                    child: Icon(
+                      Icons.remove_red_eye_sharp,
+                      color: Colors.grey,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordObscureText = !_passwordObscureText;
+                      });
+                    },
                   ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(text: "Ich akzeptiere die "),
-                          TextSpan(
-                            text: "AGBs",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          TextSpan(text: " und die "),
-                          TextSpan(
-                            text: "Datenschutzbestimmungen",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
+                  controller: _passwordController,
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 20,
+                      width: 20,
+                      child: Checkbox(
+                        activeColor: Theme.of(context).primaryColor,
+                        value: _checkBoxValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _checkBoxValue = !_checkBoxValue;
+                          });
+                        },
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: "Ich akzeptiere die "),
+                            TextSpan(
+                              text: "AGBs",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            TextSpan(text: " und die "),
+                            TextSpan(
+                              text: "Datenschutzbestimmungen",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
+              SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                ),
+                child: Text(
+                  "WEITER",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: onTapContinue,
               ),
-              child: Text(
-                "WEITER",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: onTapContinue,
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -177,6 +177,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (response.code == "200") {
       Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Ihnen wurde nun ein Link per E-Mail gesendet um sich zu verifizieren",
+          ),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         getSnackBar(context, response.arguments["message"]),

@@ -46,8 +46,12 @@ class _TrainingListItemState extends State<TrainingListItem>
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(
-                widget.trainingModel.imageURLs.first),
+            image: widget.trainingModel.imageURLs.first.contains("https:")
+                ? CachedNetworkImageProvider(
+                    widget.trainingModel.imageURLs.first)
+                : AssetImage(
+                    "assets/images/${widget.trainingModel.imageURLs.first}",
+                  ),
           ),
         ),
         child: Column(

@@ -34,38 +34,43 @@ class _DashboardItemState extends State<DashboardItem> {
           color: Theme.of(context).primaryColor.withOpacity(0.3),
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(widget.imageURL),
+            image: widget.imageURL.contains("https")
+                ? CachedNetworkImageProvider(widget.imageURL)
+                : AssetImage("assets/images/${widget.imageURL}"),
           ),
         ),
         height: 150,
         padding: EdgeInsets.only(bottom: 20),
         width: MediaQuery.of(context).size.width * 0.9,
         alignment: Alignment.bottomCenter,
-        child: Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+        child: Container(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                padding: EdgeInsets.all(5),
+                child: widget.buttonWidget,
               ),
-              padding: EdgeInsets.all(5),
-              child: widget.buttonWidget,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.title,
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Text(widget.bodyText),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Text(widget.bodyText),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

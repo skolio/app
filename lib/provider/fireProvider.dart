@@ -69,6 +69,15 @@ class FireProvider {
         });
       }
 
+      if (!result.user.emailVerified) {
+        return ResponseModel(
+          "404",
+          arguments: {
+            "message": "Bitte verifizieren Sie Ihre E-Mail Adresse",
+          },
+        );
+      }
+
       final userDoc =
           await _store.collection("Users").doc(result.user.uid).get();
 
@@ -117,6 +126,8 @@ class FireProvider {
       final result = await _auth.createUserWithEmailAndPassword(
           email: userModel.email, password: password);
 
+      await result.user.sendEmailVerification();
+
       if (result.user == null) {
         return ResponseModel(
           "404",
@@ -129,9 +140,9 @@ class FireProvider {
 
       userModel.uid = result.user.uid;
 
-      _store.collection("Users").doc(userModel.uid).set(userModel.asMap);
+      await _store.collection("Users").doc(userModel.uid).set(userModel.asMap);
 
-      return ResponseModel("200", arguments: {"userModel": userModel});
+      return ResponseModel("200");
     } catch (e) {
       if (e is FirebaseException) {
         return ResponseModel(
@@ -285,14 +296,32 @@ class FireProvider {
   }
 
   addTrainingToStats(String id) async {
-    await _store
+    final statsDoc = await _store
         .collection("Users")
         .doc(_auth.currentUser.uid)
         .collection("Statistics")
         .doc(DateTime.now().toString().split(" ").first)
-        .update({
-      "record": FieldValue.arrayUnion([id])
-    });
+        .get();
+
+    if (statsDoc.data() == null) {
+      await _store
+          .collection("Users")
+          .doc(_auth.currentUser.uid)
+          .collection("Statistics")
+          .doc(DateTime.now().toString().split(" ").first)
+          .set({
+        "record": FieldValue.arrayUnion([id])
+      });
+    } else {
+      await _store
+          .collection("Users")
+          .doc(_auth.currentUser.uid)
+          .collection("Statistics")
+          .doc(DateTime.now().toString().split(" ").first)
+          .update({
+        "record": FieldValue.arrayUnion([id])
+      });
+    }
   }
 
   //* StorageMethods
