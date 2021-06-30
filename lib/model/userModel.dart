@@ -1,3 +1,5 @@
+import 'package:skolio/screens/main/statsScreen.dart';
+
 class UserModel {
   String uid;
   String username;

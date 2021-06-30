@@ -46,7 +46,7 @@ class _StartTrainingScreenState extends State<StartTrainingScreen> {
             child: Container(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                "Es gibt heute keine Übungen zum erledigen",
+                "Du hast für heute keine Übungen geplant.",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

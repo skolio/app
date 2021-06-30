@@ -33,6 +33,10 @@ class TrainingBloc {
   TrainingModel fetchTrainingModel(String id) =>
       _trainingRepo.fetchTrainingModel(id);
 
+  deleteUser() {
+    _trainingRepo.deleteUser();
+  }
+
   dispose() {
     _trainingListFetcher.close();
   }

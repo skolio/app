@@ -36,10 +36,12 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Skolio benötigt zugriff auf deine Kamera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Skolio benötigt zugriff auf dein Mikrofon</string>
 </dict>
 </plist>

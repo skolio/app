@@ -1,11 +1,9 @@
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/provider/fireProvider.dart';
-import 'package:skolio/provider/sharedProvider.dart';
 
 class TrainingRepo {
   final _fireProvider = FireProvider();
-  final _sharedProvider = SharedProvider();
 
   List<TrainingModel> trainingList = [];
   List<TrainingModel> trainingPlan = [];
@@ -55,5 +53,10 @@ class TrainingRepo {
     trainingPlan.removeWhere((element) => element.id == trainingID);
 
     return trainingPlan;
+  }
+
+  deleteUser() async {
+    trainingList.clear();
+    trainingPlan.clear();
   }
 }

@@ -183,10 +183,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           builder: (context) => LoginScreen(),
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Ihnen wurde nun ein Link per E-Mail gesendet um sich zu verifizieren",
+
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              "Vielen Dank für deine Registrierung bei Skolio. Wir haben die eine E-Mail geschickt. Bitte verifiziere deine E-Mailadresse und logge dich danach bei Skolio ein",
+              style: TextStyle(),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
