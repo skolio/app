@@ -108,15 +108,14 @@ class FireProvider {
         },
       );
     } catch (e) {
-      if (e is FirebaseException) {
-        return ResponseModel(
-          e.code,
-          arguments: {
-            "message": e.message,
-          },
-        );
-      } else
-        return ResponseModel("404");
+      if (e is FirebaseException)
+        return ResponseModel(e.code, arguments: {
+          "message": getFirebaseErrorMessage(e.code),
+        });
+      else
+        return ResponseModel("404", arguments: {
+          "message": getFirebaseErrorMessage(e.code),
+        });
     }
   }
 
@@ -144,15 +143,14 @@ class FireProvider {
 
       return ResponseModel("200");
     } catch (e) {
-      if (e is FirebaseException) {
-        return ResponseModel(
-          e.code,
-          arguments: {
-            "message": e.message,
-          },
-        );
-      } else
-        return ResponseModel("404");
+      if (e is FirebaseException)
+        return ResponseModel(e.code, arguments: {
+          "message": getFirebaseErrorMessage(e.code),
+        });
+      else
+        return ResponseModel("404", arguments: {
+          "message": getFirebaseErrorMessage(e.code),
+        });
     }
   }
 
@@ -235,6 +233,23 @@ class FireProvider {
 
   signOut() {
     _auth.signOut();
+  }
+
+  deleteUser() async {
+    final ownTrainingDocs = await _store
+        .collection("OwnTraining")
+        .where("uid", isEqualTo: _auth.currentUser.uid)
+        .get();
+
+    if (ownTrainingDocs.size != 0) {
+      ownTrainingDocs.docs.forEach((element) {
+        _store.collection("OwnTraining").doc(element.id).delete();
+      });
+    }
+
+    _store.collection("Users").doc(_auth.currentUser.uid).delete();
+
+    _auth.currentUser.delete();
   }
 
   //* TrainingMethods

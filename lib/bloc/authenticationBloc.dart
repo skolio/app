@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/userModel.dart';
 import 'package:skolio/provider/fireProvider.dart';
@@ -90,6 +91,12 @@ class AuthenticationBloc {
     await _fireProvider.addTrainingToStats(id);
     initUser();
     _userFetcher.sink.add(userModel);
+  }
+
+  deleteUser() async {
+    await _fireProvider.deleteUser();
+    trainingBloc.deleteUser();
+    _userFetcher.sink.add(null);
   }
 
   dispose() {

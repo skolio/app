@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/screens/main/cameraScreen.dart';
 import 'package:skolio/widgets/authentication/loadingDialog.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 
@@ -19,6 +21,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
   final _descriptionController = TextEditingController();
 
   int setCount = 0;
+  int repititionCount = 0;
   String duration = "00:00";
   List<TextEditingController> imageTitles = [];
 
@@ -140,7 +143,29 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                   ).toList())
                     ..add(
                       InkWell(
-                        onTap: onTapAddImage,
+                        onTap: () {
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) => CupertinoActionSheet(
+                              actions: [
+                                CupertinoActionSheetAction(
+                                  child: Text("Kamera"),
+                                  onPressed: onTapCamera,
+                                ),
+                                CupertinoActionSheetAction(
+                                  child: Text("Galerie"),
+                                  onPressed: onTapAddImage,
+                                ),
+                              ],
+                              cancelButton: CupertinoActionSheetAction(
+                                child: Text("Abbrechen"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          );
+                        },
                         child: Container(
                           child: Center(
                             child: Icon(
@@ -206,33 +231,48 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: onTapDuration,
                       child: Container(
                         child: Column(
                           children: [
                             Text(
-                              "Dauer",
+                              "Anzahl Einheiten",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(height: 5),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CupertinoButton(
                                   padding: EdgeInsets.zero,
-                                  child: Container(),
-                                  onPressed: null,
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      if (repititionCount != 0)
+                                        repititionCount--;
+                                    });
+                                  },
                                 ),
                                 Text(
-                                  duration,
+                                  repititionCount.toString(),
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 CupertinoButton(
                                   padding: EdgeInsets.zero,
-                                  child: Container(),
-                                  onPressed: null,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    setState(() {
+                                      repititionCount++;
+                                    });
+                                  },
                                 ),
                               ],
                             ),
@@ -241,6 +281,41 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                       ),
                     ),
                   ],
+                ),
+                GestureDetector(
+                  onTap: onTapDuration,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Text(
+                          "Pausendauer",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: Container(),
+                              onPressed: null,
+                            ),
+                            Text(
+                              duration,
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: Container(),
+                              onPressed: null,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 30,
@@ -281,7 +356,8 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
         "imageURLs": images,
         "imageTitle": imageTitles.map((e) => e.text).toList(),
         "sets": setCount,
-        "duration": "00:" + duration,
+        "repitions": repititionCount,
+        "pauseBetween": "00:" + duration,
       },
     );
 
@@ -319,6 +395,23 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
       }
       setState(() {});
     }
+  }
+
+  onTapCamera() async {
+    final camera = await availableCameras();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(
+          camera: camera.first,
+          onImageTaken: (imagePath, imageName) async {
+            images.add(imagePath);
+            imageTitles.add(TextEditingController());
+            setState(() {});
+          },
+        ),
+      ),
+    );
   }
 
   onTapDuration() {

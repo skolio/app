@@ -1,9 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class StatsScreen extends StatefulWidget {
   @override
@@ -27,15 +27,21 @@ class _StatsScreenState extends State<StatsScreen> {
               ),
             );
 
+          List dateTimes = snapshot.data.statistic.keys.toList();
+          dateTimes
+              .sort((a, b) => DateTime.parse(b).compareTo(DateTime.parse(a)));
+
           return ListView.builder(
-            itemCount: snapshot.data.statistic.keys.length,
+            itemCount: dateTimes.length,
             itemBuilder: (context, index) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    snapshot.data.statistic.keys.elementAt(index),
+                    formatDate(
+                      dateTimes[index],
+                    ),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -92,9 +98,10 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   formatDate(String date) {
-    // DateTime dateTime = DateTime.parse(date);
-    // final DateFormat _dateFormat = DateFormat("EEEE, dd, MM yyyy", "de_DE");
+    initializeDateFormatting();
+    DateTime dateTime = DateTime.parse(date);
+    final DateFormat _dateFormat = DateFormat("EEEE, dd.MM.yyyy", "de_DE");
 
-    // print(_dateFormat.format(dateTime).toString());
+    return _dateFormat.format(dateTime).toString();
   }
 }
