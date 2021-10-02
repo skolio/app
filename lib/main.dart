@@ -25,6 +25,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color.fromRGBO(235, 123, 0, 1),
         textTheme: TextTheme(

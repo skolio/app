@@ -6,6 +6,7 @@ import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/model/userModel.dart';
 import '../model/responseModel.dart';
+import 'package:uuid/uuid.dart';
 
 class FireProvider {
   final _auth = FirebaseAuth.instance;
@@ -341,8 +342,9 @@ class FireProvider {
 
   //* StorageMethods
   Future<String> uploadFile(String filePath) async {
-    final storageName =
-        DateTime.now().toString() + "§" + filePath.split("/").last;
+    final uuid = Uuid();
+
+    final storageName = DateTime.now().toString() + "." + uuid.v4();
 
     final ref = _storage.ref().child(storageName);
     final uploadTask = ref.putFile(File(filePath));
