@@ -244,6 +244,10 @@ class FireProvider {
 
     if (ownTrainingDocs.size != 0) {
       ownTrainingDocs.docs.forEach((element) {
+        Map data = element.data();
+        data["imageURLs"].forEach((e) {
+          _storage.refFromURL(e).delete();
+        });
         _store.collection("OwnTraining").doc(element.id).delete();
       });
     }

@@ -48,5 +48,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Skolio benötigt zugriff auf deine Kamera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Skolio benötigt zugriff auf dein Mikrofon</string>
 </dict>
 </plist>
