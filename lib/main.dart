@@ -27,6 +27,9 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: Color.fromRGBO(235, 123, 0, 1),
+        ),
         primaryColor: Color.fromRGBO(235, 123, 0, 1),
         textTheme: TextTheme(
           headline6: TextStyle(fontSize: 18),

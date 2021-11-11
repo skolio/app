@@ -43,6 +43,4 @@ class SharedProvider {
       return ResponseModel("200");
     }
   }
-
-  fetchHistory() {}
 }

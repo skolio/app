@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets/main/infoDialog.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 
 import '../../bloc/authenticationBloc.dart';
@@ -21,7 +22,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("REGISTRIERUNG"),
+        title: Text("ANMELDUNG"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -100,6 +101,10 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (response.code == "200") {
       Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) => InfoDialog(),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         getSnackBar(

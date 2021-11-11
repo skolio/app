@@ -51,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             DashboardItem(
               imageURL: "Segel_ASTE.png",
               title: "Deine Erfolge",
-              bodyText: "Starte jetzt dein Training",
+              bodyText: "Verfole deine Entwicklung",
               onTap: () {
                 widget.changeCurrentScreen(3);
               },
