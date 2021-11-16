@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
+import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/screens/main/cameraScreen.dart';
@@ -12,6 +13,11 @@ import 'package:skolio/widgets/authentication/loadingDialog.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 
 class NewTrainingScreen extends StatefulWidget {
+  final TrainingModel trainingModel;
+  final Function setState;
+
+  NewTrainingScreen(this.trainingModel, this.setState);
+
   @override
   _NewTrainingScreenState createState() => _NewTrainingScreenState();
 }
@@ -26,6 +32,28 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
   List<TextEditingController> imageTitles = [];
 
   List<String> images = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.trainingModel != null) {
+      _nameController.text = widget.trainingModel.title;
+      _descriptionController.text = widget.trainingModel.description;
+
+      setCount = widget.trainingModel.sets;
+      repititionCount = widget.trainingModel.repitions;
+      duration = widget.trainingModel.pauseBetween.inMinutes.toString() +
+          ":" +
+          widget.trainingModel.pauseBetween.inSeconds.toString();
+
+      for (int i = 0; i < widget.trainingModel.imageURLs.length; i++) {
+        imageTitles.add(
+          TextEditingController(text: widget.trainingModel.imageTitle[i]),
+        );
+        images.add(widget.trainingModel.imageURLs[i]);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +119,9 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: FileImage(File(e)),
+                                          image: e.contains("https")
+                                              ? NetworkImage(e)
+                                              : FileImage(File(e)),
                                         ),
                                       ),
                                     ),
@@ -350,7 +380,8 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
 
     TrainingModel trainingModel = TrainingModel.fromMap(
       {
-        "id": "",
+        "id": widget.trainingModel != null ? widget.trainingModel.id : "",
+        "uid": authenticationBloc.currentUser.valueOrNull.uid,
         "title": _nameController.text,
         "description": _descriptionController.text,
         "imageURLs": images,
@@ -363,7 +394,14 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
 
     showDialog(context: context, builder: (context) => LoadingDialog());
 
-    final response = await trainingBloc.addOwnTraining(trainingModel);
+    var response;
+
+    if (widget.trainingModel == null) {
+      response = await trainingBloc.addOwnTraining(trainingModel);
+    } else {
+      response = await trainingBloc.editTraining(trainingModel);
+      widget.setState(trainingModel);
+    }
 
     Navigator.pop(context);
 

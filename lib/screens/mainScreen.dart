@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/screens/main/dataPrivacyScreen.dart';
 import 'package:skolio/screens/main/imprintScreen.dart';
+import 'package:skolio/screens/main/reordableTrainingPlanScreen.dart';
 import 'package:skolio/screens/main/settingScreen.dart';
 import 'package:skolio/screens/main/startTrainingScreen.dart';
 import 'package:skolio/screens/main/statsScreen.dart';
@@ -35,7 +36,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _screens = [
       DashboardScreen(changeCurrentScreen),
-      TrainingsPlanScreen(),
+      // TrainingsPlanScreen(),
+      ReordableTrainingPlanScreen(),
       StartTrainingScreen(changeCurrentScreen),
       StatsScreen(),
       SettingScreen(),

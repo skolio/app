@@ -274,6 +274,9 @@ class FireProvider {
     if (ownTrainingListResult.size != 0) {
       returnList
           .addAll(ownTrainingListResult.docs.map((e) => e.data()).toList());
+      ownTrainingListResult.docs.forEach((element) {
+        print(element.data());
+      });
     }
 
     if (returnList.length == 0) {
@@ -299,6 +302,24 @@ class FireProvider {
     await trainingDoc.update({"uid": _auth.currentUser.uid});
 
     return ResponseModel("200");
+  }
+
+  editTraining(TrainingModel trainingModel) async {
+    for (int i = 0; i < trainingModel.imageURLs.length; i++) {
+      if (!trainingModel.imageURLs[i].contains("https://")) {
+        final response = await uploadFile(trainingModel.imageURLs[i]);
+        trainingModel.imageURLs[i] = response;
+      }
+    }
+    print(trainingModel.asMap);
+    _store
+        .collection("OwnTraining")
+        .doc(trainingModel.id)
+        .update(trainingModel.asMap);
+  }
+
+  deleteTraining(String id) {
+    _store.collection("Training").doc(id).delete();
   }
 
   addTrainingToPlan(String trainingID) {

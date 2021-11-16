@@ -5,10 +5,16 @@ import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
 
 class SharedProvider {
-  Future<ResponseModel> fetchTrainingList() async {
-    final sharedPref = await SharedPreferences.getInstance();
+  SharedPreferences _instance;
 
-    final result = sharedPref.getStringList("TrainingList");
+  init() async {
+    if (_instance == null) _instance = await SharedPreferences.getInstance();
+  }
+
+  Future<ResponseModel> fetchTrainingList() async {
+    await init();
+
+    final result = _instance.getStringList("TrainingList");
 
     if (result == null) {
       return ResponseModel("400");
@@ -20,12 +26,12 @@ class SharedProvider {
   }
 
   Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
-    final sharedPref = await SharedPreferences.getInstance();
+    await init();
 
-    final result = sharedPref.getStringList("TrainingList");
+    final result = _instance.getStringList("TrainingList");
 
     if (result == null) {
-      await sharedPref.setStringList("TrainingList", [
+      await _instance.setStringList("TrainingList", [
         jsonEncode(trainingModel.asMap),
       ]);
 
@@ -35,12 +41,33 @@ class SharedProvider {
 
       trainingModels.add(trainingModel.asMap);
 
-      await sharedPref.setStringList(
+      await _instance.setStringList(
         "TrainingList",
         trainingModels.map((e) => jsonEncode(e)).toList(),
       );
 
       return ResponseModel("200");
     }
+  }
+
+  Future<List<String>> getOrderOfTrainingList() async {
+    await init();
+    try {
+      final response = _instance.getStringList("TrainingListOrder");
+
+      if (response.isEmpty) return [];
+
+      return response;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  setOrderOfTrainingList(List<String> trainingListIDs) async {
+    await init();
+
+    print("Setting some order for the list");
+
+    _instance.setStringList("TrainingListOrder", trainingListIDs);
   }
 }

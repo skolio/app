@@ -31,6 +31,9 @@ class _MainAppState extends State<MainApp> {
           color: Color.fromRGBO(235, 123, 0, 1),
         ),
         primaryColor: Color.fromRGBO(235, 123, 0, 1),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Color.fromRGBO(235, 123, 0, 1),
+        ),
         textTheme: TextTheme(
           headline6: TextStyle(fontSize: 18),
         ),

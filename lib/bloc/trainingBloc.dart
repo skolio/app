@@ -21,6 +21,13 @@ class TrainingBloc {
     }
   }
 
+  changeTrainingListOrder(List<String> trainingListOrder) async {
+    final response =
+        await _trainingRepo.changeTrainingListOrder(trainingListOrder);
+
+    _trainingListFetcher.sink.add(response.arguments["trainingList"]);
+  }
+
   Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
     final result = await _trainingRepo.addOwnTraining(trainingModel);
     if (result.code == "200") {
@@ -28,6 +35,18 @@ class TrainingBloc {
       return ResponseModel("200");
     } else
       return result;
+  }
+
+  Future<ResponseModel> editTraining(TrainingModel trainingModel) async {
+    final response = await _trainingRepo.editTraining(trainingModel);
+
+    _trainingListFetcher.sink.add(response);
+
+    return ResponseModel("200");
+  }
+
+  deleteTraining(String id) {
+    _trainingListFetcher.sink.add(_trainingRepo.deleteTraining(id));
   }
 
   TrainingModel fetchTrainingModel(String id) =>

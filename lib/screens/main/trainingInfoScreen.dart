@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/authenticationBloc.dart';
+import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/screens/main/newTrainingScreen.dart';
 
 class TrainingInfoScreen extends StatefulWidget {
   final TrainingModel trainingModel;
@@ -14,11 +17,86 @@ class TrainingInfoScreen extends StatefulWidget {
 
 class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
   @override
+  void initState() {
+    super.initState();
+    print(widget.trainingModel.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.trainingModel.title),
+        actions: [
+          Expanded(
+            child: Container(),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                widget.trainingModel.title,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: widget.trainingModel.uid ==
+                    authenticationBloc.currentUser.valueOrNull.uid
+                ? Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            trainingBloc
+                                .deleteTraining(widget.trainingModel.id);
+                            authenticationBloc.removeTrainingFromPlan(
+                              widget.trainingModel.id,
+                            );
+                            Navigator.pop(context);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewTrainingScreen(
+                                  widget.trainingModel,
+                                  (newTrainingModel) {
+                                    setState(() {
+                                      widget.trainingModel.title =
+                                          newTrainingModel.title;
+                                      widget.trainingModel.description =
+                                          newTrainingModel.description;
+                                      widget.trainingModel.imageURLs =
+                                          newTrainingModel.imageURLs;
+                                      widget.trainingModel.imageTitle =
+                                          newTrainingModel.imageTitle;
+                                      widget.trainingModel.repitions =
+                                          newTrainingModel.repitions;
+                                      widget.trainingModel.sets =
+                                          newTrainingModel.sets;
+                                      widget.trainingModel.pauseBetween =
+                                          newTrainingModel.pauseBetween;
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

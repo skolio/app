@@ -1,5 +1,6 @@
 class TrainingModel {
   String id;
+  String uid;
   String title;
   String description;
   List<String> imageURLs;
@@ -10,6 +11,7 @@ class TrainingModel {
 
   TrainingModel.fromMap(Map data) {
     id = data["id"];
+    uid = data["uid"] ?? "";
     title = data["title"];
     description = data["description"];
     imageURLs = List<String>.from(data["imageURLs"]);
@@ -21,6 +23,7 @@ class TrainingModel {
 
   Map<String, dynamic> get asMap => {
         "id": id,
+        "uid": uid,
         "title": title,
         "description": description,
         "imageURLs": imageURLs,

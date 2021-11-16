@@ -29,6 +29,7 @@ class _TrainingListItemState extends State<TrainingListItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return InkWell(
       onTap: () {
         Navigator.push(

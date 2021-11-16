@@ -24,6 +24,7 @@ class _InfoDialogState extends State<InfoDialog> {
           children: [
             SizedBox(height: 10),
             Container(
+              margin: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 "Skolio ist eine Anwendung zur Unterstützung Deiner Skoliose-Therapie. Das Training mit Skolio sollte nur nach Anleitung durch einen geschulten Therapeuten erfolgen.",
                 style: TextStyle(

@@ -26,7 +26,8 @@ class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
                 : snapshot.data.length == 0
                     ? Center(
                         child: Text(
-                            "Es gibt noch keine Trainingsübungen zum auswählen"))
+                            "Es gibt noch keine Trainingsübungen zum auswählen"),
+                      )
                     : ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) => Container(
@@ -75,7 +76,7 @@ class _TrainingsPlanScreenState extends State<TrainingsPlanScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NewTrainingScreen(),
+                    builder: (context) => NewTrainingScreen(null, null),
                   ),
                 );
               },
