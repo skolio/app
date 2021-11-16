@@ -17,6 +17,7 @@ class _ReordableTrainingPlanScreenState
   @override
   void initState() {
     super.initState();
+    print(trainingBloc.trainingList.valueOrNull.length);
     trainingPlan.addAll(trainingBloc.trainingList.valueOrNull);
   }
 
@@ -41,7 +42,7 @@ class _ReordableTrainingPlanScreenState
                       color: Colors.transparent,
                     ),
                     margin: EdgeInsets.only(top: 20),
-                    key: Key(index.toString()),
+                    key: Key(trainingPlan[index].id),
                     child: TrainingListItem(
                       trainingPlan[index],
                       null,

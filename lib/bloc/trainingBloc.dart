@@ -13,7 +13,8 @@ class TrainingBloc {
 
   fetchTrainingList() async {
     final response = await _trainingRepo.fetchTrainingList();
-
+    print("This is from the bloc method ${response.arguments["trainingList"]}");
+    print(response.code);
     if (response.code == "200") {
       _trainingListFetcher.sink.add(response.arguments["trainingList"]);
     } else {
