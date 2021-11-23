@@ -26,11 +26,20 @@ class TrainingRepo {
 
       final orderList = await _sharedProvider.getOrderOfTrainingList();
 
-      print(orderList);
+      print("this is the orderList $orderList");
 
       if (orderList.isNotEmpty) {
+        print("We want to iterate through the orderList");
         for (int i = 0; i < orderList.length; i++) {
+          final item = trainingList.firstWhere(
+            (e) => e.id == orderList[i],
+            orElse: () => null,
+          );
+
+          print(item == null);
+
           if (trainingList.indexWhere((e) => e.id == orderList[i]) != -1) {
+            print("We are adding something here");
             trainingList.add(
               temporaryList.firstWhere((element) => element.id == orderList[i]),
             );
@@ -39,6 +48,7 @@ class TrainingRepo {
             i--;
           }
         }
+        print("We are finished");
 
         _sharedProvider.setOrderOfTrainingList(orderList);
       } else {
