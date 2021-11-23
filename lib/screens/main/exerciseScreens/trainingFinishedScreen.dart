@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/screens/main/exerciseScreens/trainingScreen.dart';
 import 'package:skolio/screens/main/statsScreen.dart';
 
@@ -13,6 +14,13 @@ class TrainingFinishedScreen extends StatefulWidget {
 }
 
 class _TrainingFinishedScreenState extends State<TrainingFinishedScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    analyticsBloc.logTrainingFinished();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/model/userModel.dart';
@@ -141,6 +142,8 @@ class FireProvider {
       userModel.uid = result.user.uid;
 
       await _store.collection("Users").doc(userModel.uid).set(userModel.asMap);
+
+      analyticsBloc.logRegisterFinished();
 
       return ResponseModel("200");
     } catch (e) {
@@ -291,6 +294,7 @@ class FireProvider {
     List<String> imageURLs = [];
 
     for (int i = 0; i < ownTrainingModel.imageURLs.length; i++) {
+      analyticsBloc.logImageUpload();
       imageURLs.add(await uploadFile(ownTrainingModel.imageURLs[i]));
     }
 
@@ -300,6 +304,8 @@ class FireProvider {
 
     await trainingDoc.set(ownTrainingModel.asMap);
     await trainingDoc.update({"uid": _auth.currentUser.uid});
+
+    analyticsBloc.logNewTraining();
 
     return ResponseModel("200");
   }
@@ -319,6 +325,7 @@ class FireProvider {
   }
 
   deleteTraining(String id) {
+    analyticsBloc.logTrainingDelete();
     _store.collection("Training").doc(id).delete();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/screens/main/exerciseScreens/trainingLoadingScreen.dart';
@@ -15,6 +16,12 @@ class StartTrainingScreen extends StatefulWidget {
 }
 
 class _StartTrainingScreenState extends State<StartTrainingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    analyticsBloc.logTrainingStart();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(

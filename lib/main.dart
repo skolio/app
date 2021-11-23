@@ -1,14 +1,20 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/screens/authentication/startScreen.dart';
 import 'package:skolio/screens/loadingScreen.dart';
 
 import 'bloc/authenticationBloc.dart';
 import 'screens/mainScreen.dart';
 
+final FirebaseAnalytics _analytics = FirebaseAnalytics();
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  analyticsBloc.logAppStart();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -25,6 +31,9 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: _analytics),
+      ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
