@@ -17,7 +17,6 @@ class _ReordableTrainingPlanScreenState
   @override
   void initState() {
     super.initState();
-    print(trainingBloc.trainingList.valueOrNull.length);
     trainingPlan.addAll(trainingBloc.trainingList.valueOrNull);
   }
 
@@ -27,8 +26,8 @@ class _ReordableTrainingPlanScreenState
       children: [
         Container(
           padding: EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.05,
-            right: MediaQuery.of(context).size.width * 0.05,
+            left: MediaQuery.of(context).size.width * 0.03,
+            right: MediaQuery.of(context).size.width * 0.03,
           ),
           child: trainingPlan.length == 0
               ? Center(
@@ -38,10 +37,12 @@ class _ReordableTrainingPlanScreenState
               : ReorderableListView.builder(
                   itemCount: trainingPlan.length,
                   itemBuilder: (context, index) => Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
+                    margin: EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                      bottom: 10,
                     ),
-                    margin: EdgeInsets.only(top: 20),
                     key: Key(trainingPlan[index].id),
                     child: TrainingListItem(
                       trainingPlan[index],

@@ -31,6 +31,7 @@ class _TrainingListItemState extends State<TrainingListItem>
   Widget build(BuildContext context) {
     super.build(context);
     return InkWell(
+      splashColor: Colors.transparent,
       onTap: () {
         Navigator.push(
           context,
@@ -43,13 +44,14 @@ class _TrainingListItemState extends State<TrainingListItem>
         height: 150,
         width: MediaQuery.of(context).size.width * 0.3,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.3),
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             fit: BoxFit.cover,
             image: widget.trainingModel.imageURLs.first.contains("https:")
                 ? CachedNetworkImageProvider(
-                    widget.trainingModel.imageURLs.first)
+                    widget.trainingModel.imageURLs.first,
+                  )
                 : AssetImage(
                     "assets/images/${widget.trainingModel.imageURLs.first}",
                   ),

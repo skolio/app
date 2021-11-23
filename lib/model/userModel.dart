@@ -1,5 +1,3 @@
-import 'package:skolio/screens/main/statsScreen.dart';
-
 class UserModel {
   String uid;
   String username;
@@ -21,4 +19,25 @@ class UserModel {
         "email": email,
         "trainingPlan": trainingPlan,
       };
+
+  setOrderOfTrainingPlan(List<String> trainingPlanOrder) {
+    final List<String> orderedPlan = <String>[];
+
+    if (trainingPlanOrder == null || trainingPlanOrder.isEmpty) {
+      return;
+    }
+
+    trainingPlanOrder.forEach((e) {
+      if (trainingPlan.contains(e)) {
+        orderedPlan.add(e);
+      }
+    });
+
+    orderedPlan.addAll(
+      trainingPlan.where((e) => !orderedPlan.contains(e)).toList(),
+    );
+
+    trainingPlan.clear();
+    trainingPlan.addAll(orderedPlan);
+  }
 }

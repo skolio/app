@@ -6,6 +6,7 @@ import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
 import 'package:skolio/model/userModel.dart';
+import 'package:skolio/provider/sharedProvider.dart';
 import '../model/responseModel.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,11 +15,18 @@ class FireProvider {
   final _store = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
 
+  final _sharedProvider = SharedProvider();
+
   //* AuthenticationMethods
 
   Future<ResponseModel> initUser() async {
     if (_auth.currentUser == null) {
     } else {
+      if (!_auth.currentUser.emailVerified) {
+        _auth.signOut();
+        return ResponseModel("400");
+      }
+
       final userDoc =
           await _store.collection("Users").doc(_auth.currentUser.uid).get();
 
@@ -34,24 +42,21 @@ class FireProvider {
           .collection("Statistics")
           .get();
 
-      print(statDocs.size);
-
       Map statList = {};
 
-      print("This is stopping here");
       statDocs.docs.forEach((element) {
-        print(element.data()["record"]);
         statList[element.id] = element.data()["record"];
       });
 
-      print("This is the statLists length");
+      final trainingPlanOrder = await _sharedProvider.getOrderOfTrainingPlan();
 
-      print(statList.keys.length);
-
+      final userModel = UserModel.fromMap(userDoc.data(), statList);
+      userModel.setOrderOfTrainingPlan(trainingPlanOrder);
+      _sharedProvider.setOrderOfTrainingPlan(userModel.trainingPlan);
       return ResponseModel(
         "200",
         arguments: {
-          "userModel": UserModel.fromMap(userDoc.data(), statList),
+          "userModel": userModel,
         },
       );
     }
@@ -103,10 +108,18 @@ class FireProvider {
         statList.putIfAbsent(element.id, () => element.data()["record"]);
       });
 
+      final trainingPlanOrder = await _sharedProvider.getOrderOfTrainingPlan();
+
+      final userModel = UserModel.fromMap(userDoc.data(), statList);
+
+      userModel.setOrderOfTrainingPlan(trainingPlanOrder);
+
+      _sharedProvider.setOrderOfTrainingPlan(userModel.trainingPlan);
+
       return ResponseModel(
         "200",
         arguments: {
-          "userModel": UserModel.fromMap(userDoc.data(), statList),
+          "userModel": userModel,
         },
       );
     } catch (e) {
@@ -127,8 +140,6 @@ class FireProvider {
       final result = await _auth.createUserWithEmailAndPassword(
           email: userModel.email, password: password);
 
-      await result.user.sendEmailVerification();
-
       if (result.user == null) {
         return ResponseModel(
           "404",
@@ -144,6 +155,7 @@ class FireProvider {
       await _store.collection("Users").doc(userModel.uid).set(userModel.asMap);
 
       analyticsBloc.logRegisterFinished();
+      // _auth.signOut();
 
       return ResponseModel("200");
     } catch (e) {
@@ -260,10 +272,15 @@ class FireProvider {
     _auth.currentUser.delete();
   }
 
+  setOrderOfTrainingPlan(List<String> trainingPlanOrder) {
+    _sharedProvider.setOrderOfTrainingPlan(trainingPlanOrder);
+  }
+
   //* TrainingMethods
 
   Future<ResponseModel> fetchTrainingList() async {
     final trainingListResult = await _store.collection("Training").get();
+
     final ownTrainingListResult = await _store
         .collection("OwnTraining")
         .where("uid", isEqualTo: _auth.currentUser.uid)
@@ -277,9 +294,6 @@ class FireProvider {
     if (ownTrainingListResult.size != 0) {
       returnList
           .addAll(ownTrainingListResult.docs.map((e) => e.data()).toList());
-      ownTrainingListResult.docs.forEach((element) {
-        print(element.data());
-      });
     }
 
     if (returnList.length == 0) {
@@ -317,7 +331,6 @@ class FireProvider {
         trainingModel.imageURLs[i] = response;
       }
     }
-    print(trainingModel.asMap);
     _store
         .collection("OwnTraining")
         .doc(trainingModel.id)

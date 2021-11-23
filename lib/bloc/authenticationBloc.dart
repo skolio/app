@@ -3,6 +3,7 @@ import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/userModel.dart';
 import 'package:skolio/provider/fireProvider.dart';
+import 'package:skolio/provider/sharedProvider.dart';
 
 import '../model/responseModel.dart';
 
@@ -71,6 +72,16 @@ class AuthenticationBloc {
     _fireProvider.addTrainingToPlan(trainingID);
   }
 
+  setOrderOfTrainingPlan(List<String> trainingPlan) {
+    final UserModel userModel = _userFetcher.valueOrNull;
+
+    userModel.setOrderOfTrainingPlan(trainingPlan);
+
+    _userFetcher.sink.add(userModel);
+
+    _fireProvider.setOrderOfTrainingPlan(userModel.trainingPlan);
+  }
+
   removeTrainingFromPlan(String trainingID) {
     UserModel userModel = _userFetcher.value;
     userModel.trainingPlan.remove(trainingID);
@@ -82,12 +93,10 @@ class AuthenticationBloc {
     UserModel userModel = _userFetcher.value;
     if (userModel.statistic[DateTime.now().toString().split(" ").first] !=
         null) {
-      print("We are here but it doesnt want to work now");
       userModel.statistic[DateTime.now().toString().split(" ").first].add(id);
     } else {
       userModel.statistic[DateTime.now().toString().split(" ")] = [id];
     }
-    print("Here are some other things going on");
     await _fireProvider.addTrainingToStats(id);
     initUser();
     _userFetcher.sink.add(userModel);

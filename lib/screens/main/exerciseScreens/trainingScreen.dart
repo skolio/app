@@ -69,7 +69,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
       body: StreamBuilder(
         stream: authenticationBloc.currentUser,
         builder: (context, snapshot) {
-          print("This is getting updated here");
           if (snapshot.data == null)
             return Center(
               child: CircularProgressIndicator(
@@ -98,7 +97,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
               trainingBloc.fetchTrainingModel(trainingPlan.first);
 
           if (trainingPlan.length == 1) {
-            print("This is the last training session");
             lastTraining = true;
           }
 

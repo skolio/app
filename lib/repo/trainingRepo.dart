@@ -24,22 +24,18 @@ class TrainingRepo {
         ),
       );
 
+      if (temporaryList.isEmpty) {
+        await _sharedProvider.setOrderOfTrainingList([]);
+        return ResponseModel("200", arguments: {
+          "trainingList": [],
+        });
+      }
+
       final orderList = await _sharedProvider.getOrderOfTrainingList();
 
-      print("this is the orderList $orderList");
-
       if (orderList.isNotEmpty) {
-        print("We want to iterate through the orderList");
         for (int i = 0; i < orderList.length; i++) {
-          final item = trainingList.firstWhere(
-            (e) => e.id == orderList[i],
-            orElse: () => null,
-          );
-
-          print(item == null);
-
-          if (trainingList.indexWhere((e) => e.id == orderList[i]) != -1) {
-            print("We are adding something here");
+          if (trainingList.indexWhere((e) => e.id == orderList[i]) == -1) {
             trainingList.add(
               temporaryList.firstWhere((element) => element.id == orderList[i]),
             );
@@ -48,17 +44,16 @@ class TrainingRepo {
             i--;
           }
         }
-        print("We are finished");
 
-        _sharedProvider.setOrderOfTrainingList(orderList);
+        _sharedProvider.setOrderOfTrainingList(
+          List<String>.from(trainingList.map((e) => e.id).toList()),
+        );
       } else {
-        print("We are here");
         trainingList.addAll(temporaryList);
         _sharedProvider.setOrderOfTrainingList(
           List<String>.from(trainingList.map((e) => e.id).toList()),
         );
       }
-
       return ResponseModel("200", arguments: {
         "trainingList": trainingList,
       });
@@ -80,6 +75,8 @@ class TrainingRepo {
         i--;
       }
     }
+
+    //TODO add the Rest of the trainingList that wasnt added to the order
 
     _sharedProvider.setOrderOfTrainingList(trainingListOrder);
 
@@ -114,8 +111,6 @@ class TrainingRepo {
     final trainingListIndex = trainingList.indexWhere(
       (model) => model.id == trainingModel.id,
     );
-
-    print(trainingListIndex);
 
     if (trainingListIndex != -1)
       trainingList[trainingListIndex] = trainingModel;

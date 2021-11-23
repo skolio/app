@@ -55,10 +55,10 @@ class SharedProvider {
     try {
       final response = _instance.getStringList("TrainingListOrder");
 
-      if (response.isEmpty) return [];
-
       return response;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print("There was an error");
+      print(stackTrace);
       return [];
     }
   }
@@ -66,8 +66,27 @@ class SharedProvider {
   setOrderOfTrainingList(List<String> trainingListIDs) async {
     await init();
 
-    print("Setting some order for the list");
-
     _instance.setStringList("TrainingListOrder", trainingListIDs);
+  }
+
+  Future<List<String>> getOrderOfTrainingPlan() async {
+    await init();
+
+    try {
+      final response = _instance.getStringList("TrainingPlanOrder");
+
+      return response;
+    } catch (e, stackTrace) {
+      print(
+          "There was some error in the getOrderOfTrainingPlan method $stackTrace");
+
+      return [];
+    }
+  }
+
+  setOrderOfTrainingPlan(List<String> trainingPlanOrder) async {
+    await init();
+
+    _instance.setStringList("TrainingPlanOrder", trainingPlanOrder);
   }
 }

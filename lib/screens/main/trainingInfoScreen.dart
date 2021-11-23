@@ -19,7 +19,6 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.trainingModel.id);
   }
 
   @override
