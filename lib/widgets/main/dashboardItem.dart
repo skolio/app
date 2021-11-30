@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +38,9 @@ class _DashboardItemState extends State<DashboardItem> {
             fit: BoxFit.cover,
             image: widget.imageURL.contains("https")
                 ? CachedNetworkImageProvider(widget.imageURL)
-                : AssetImage("assets/images/${widget.imageURL}"),
+                : widget.imageURL.contains("/")
+                    ? FileImage(File(widget.imageURL))
+                    : AssetImage("assets/images/${widget.imageURL}"),
           ),
         ),
         height: 150,

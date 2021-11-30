@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +125,11 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
                                   fit: BoxFit.cover,
                                   image: e.contains("https")
                                       ? CachedNetworkImageProvider(e)
-                                      : AssetImage("assets/images/$e"),
+                                      : e.contains("/")
+                                          ? FileImage(File(e))
+                                          : AssetImage(
+                                              "assets/images/$e",
+                                            ),
                                 ),
                               ),
                             ),

@@ -44,7 +44,7 @@ android {
         applicationId "com.eryushion.skolio"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 9
+        versionCode 10
         versionName "2.0"
         multiDexEnabled true
     }

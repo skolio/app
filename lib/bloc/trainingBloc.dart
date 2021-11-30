@@ -28,8 +28,10 @@ class TrainingBloc {
     _trainingListFetcher.sink.add(response.arguments["trainingList"]);
   }
 
-  Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
-    final result = await _trainingRepo.addOwnTraining(trainingModel);
+  Future<ResponseModel> addOwnTraining(
+      TrainingModel trainingModel, bool uploadToCloud) async {
+    final result =
+        await _trainingRepo.addOwnTraining(trainingModel, uploadToCloud);
     if (result.code == "200") {
       _trainingListFetcher.sink.add(result.arguments["trainingList"]);
       return ResponseModel("200");
@@ -37,8 +39,10 @@ class TrainingBloc {
       return result;
   }
 
-  Future<ResponseModel> editTraining(TrainingModel trainingModel) async {
-    final response = await _trainingRepo.editTraining(trainingModel);
+  Future<ResponseModel> editTraining(
+      TrainingModel trainingModel, bool uploadToCloud) async {
+    final response =
+        await _trainingRepo.editTraining(trainingModel, uploadToCloud);
 
     _trainingListFetcher.sink.add(response);
 

@@ -32,18 +32,38 @@ class TrainingRepo {
       }
 
       final orderList = await _sharedProvider.getOrderOfTrainingList();
+      if (orderList != null && orderList.isNotEmpty)
+        orderList.removeWhere((element) =>
+            temporaryList.indexWhere((e) => e.id == element) == -1);
 
-      if (orderList.isNotEmpty) {
+      if (orderList != null && orderList.isNotEmpty) {
+        print("This is from the OrderList ${orderList.length}");
         for (int i = 0; i < orderList.length; i++) {
-          if (trainingList.indexWhere((e) => e.id == orderList[i]) == -1) {
+          if (trainingList.isEmpty)
             trainingList.add(
-              temporaryList.firstWhere((element) => element.id == orderList[i]),
+              temporaryList.firstWhere((element) => element.id == orderList[i],
+                  orElse: () => null),
+            );
+          else if (trainingList.indexWhere((e) => e.id == orderList[i]) == -1) {
+            trainingList.add(
+              temporaryList.firstWhere((element) => element.id == orderList[i],
+                  orElse: () => null),
             );
           } else {
             orderList.removeAt(i);
             i--;
           }
         }
+        print("This is the TemporaryList ${temporaryList.length}");
+        print("The Length of the TrainingList ${trainingList.length}");
+
+        trainingList.addAll(
+          temporaryList.where(
+            (element) => !orderList.contains(element.id),
+          ),
+        );
+
+        print("The Length of the TrainingList ${trainingList.length}");
 
         _sharedProvider.setOrderOfTrainingList(
           List<String>.from(trainingList.map((e) => e.id).toList()),
@@ -54,6 +74,9 @@ class TrainingRepo {
           List<String>.from(trainingList.map((e) => e.id).toList()),
         );
       }
+
+      print(trainingList.length);
+
       return ResponseModel("200", arguments: {
         "trainingList": trainingList,
       });
@@ -95,8 +118,10 @@ class TrainingRepo {
   TrainingModel fetchTrainingModel(String id) =>
       trainingList.firstWhere((element) => element.id == id);
 
-  Future<ResponseModel> addOwnTraining(TrainingModel trainingModel) async {
-    final response = await _fireProvider.addOwnTraining(trainingModel);
+  Future<ResponseModel> addOwnTraining(
+      TrainingModel trainingModel, bool uploadToCloud) async {
+    final response =
+        await _fireProvider.addOwnTraining(trainingModel, uploadToCloud);
 
     if (response.code == "200") {
       trainingList.add(trainingModel);
@@ -107,7 +132,7 @@ class TrainingRepo {
     return response;
   }
 
-  editTraining(TrainingModel trainingModel) async {
+  editTraining(TrainingModel trainingModel, bool uploadToCloud) async {
     final trainingListIndex = trainingList.indexWhere(
       (model) => model.id == trainingModel.id,
     );
@@ -122,7 +147,7 @@ class TrainingRepo {
       trainingPlan[trainingPlanIndex] = trainingModel;
     }
 
-    _fireProvider.editTraining(trainingModel);
+    _fireProvider.editTraining(trainingModel, uploadToCloud);
 
     return trainingList;
   }

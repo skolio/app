@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
@@ -52,9 +54,11 @@ class _TrainingListItemState extends State<TrainingListItem>
                 ? CachedNetworkImageProvider(
                     widget.trainingModel.imageURLs.first,
                   )
-                : AssetImage(
-                    "assets/images/${widget.trainingModel.imageURLs.first}",
-                  ),
+                : widget.trainingModel.imageURLs.first.contains("/")
+                    ? FileImage(File(widget.trainingModel.imageURLs.first))
+                    : AssetImage(
+                        "assets/images/${widget.trainingModel.imageURLs.first}",
+                      ),
           ),
         ),
         child: Column(

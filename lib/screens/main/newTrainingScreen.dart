@@ -31,6 +31,8 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
   String duration = "00:00";
   List<TextEditingController> imageTitles = [];
 
+  bool _toCloud = true;
+
   List<String> images = [];
 
   @override
@@ -206,6 +208,22 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                         ),
                       ),
                     ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Checkbox(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: _toCloud,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _toCloud = newValue;
+                        });
+                      },
+                    ),
+                    Text("Bilder in Cloud Speichern?"),
+                  ],
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -397,9 +415,9 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
     var response;
 
     if (widget.trainingModel == null) {
-      response = await trainingBloc.addOwnTraining(trainingModel);
+      response = await trainingBloc.addOwnTraining(trainingModel, _toCloud);
     } else {
-      response = await trainingBloc.editTraining(trainingModel);
+      response = await trainingBloc.editTraining(trainingModel, _toCloud);
       widget.setState(trainingModel);
     }
 

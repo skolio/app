@@ -286,6 +286,11 @@ class FireProvider {
         .where("uid", isEqualTo: _auth.currentUser.uid)
         .get();
 
+    print(ownTrainingListResult.size);
+    ownTrainingListResult.docs.forEach((element) {
+      print(element.data()["title"]);
+    });
+
     List<Map> returnList = [];
 
     if (trainingListResult.size != 0)
@@ -304,31 +309,39 @@ class FireProvider {
       });
   }
 
-  Future<ResponseModel> addOwnTraining(TrainingModel ownTrainingModel) async {
+  Future<ResponseModel> addOwnTraining(
+      TrainingModel ownTrainingModel, bool uploadToCloud) async {
     List<String> imageURLs = [];
 
-    for (int i = 0; i < ownTrainingModel.imageURLs.length; i++) {
-      analyticsBloc.logImageUpload();
-      imageURLs.add(await uploadFile(ownTrainingModel.imageURLs[i]));
+    if (uploadToCloud)
+      for (int i = 0; i < ownTrainingModel.imageURLs.length; i++) {
+        analyticsBloc.logImageUpload();
+        imageURLs.add(await uploadFile(ownTrainingModel.imageURLs[i]));
+      }
+    else {
+      imageURLs.addAll(ownTrainingModel.imageURLs);
     }
-
-    final trainingDoc = _store.collection("OwnTraining").doc();
     ownTrainingModel.imageURLs = imageURLs;
+
+    final trainingDoc = await _store
+        .collection("OwnTraining")
+        .add(ownTrainingModel.asMap..addAll({"uid": _auth.currentUser.uid}));
     ownTrainingModel.id = trainingDoc.id;
 
-    await trainingDoc.set(ownTrainingModel.asMap);
-    await trainingDoc.update({"uid": _auth.currentUser.uid});
+    trainingDoc.update({"id": trainingDoc.id});
 
     analyticsBloc.logNewTraining();
 
     return ResponseModel("200");
   }
 
-  editTraining(TrainingModel trainingModel) async {
+  editTraining(TrainingModel trainingModel, bool uploadToCloud) async {
     for (int i = 0; i < trainingModel.imageURLs.length; i++) {
-      if (!trainingModel.imageURLs[i].contains("https://")) {
-        final response = await uploadFile(trainingModel.imageURLs[i]);
-        trainingModel.imageURLs[i] = response;
+      if (uploadToCloud) {
+        if (!trainingModel.imageURLs[i].contains("https://")) {
+          final response = await uploadFile(trainingModel.imageURLs[i]);
+          trainingModel.imageURLs[i] = response;
+        }
       }
     }
     _store
