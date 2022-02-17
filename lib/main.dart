@@ -1,19 +1,20 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:skolio/bloc/analyitcsBloc.dart';
-import 'package:skolio/screens/authentication/startScreen.dart';
 import 'package:skolio/screens/loadingScreen.dart';
+import 'package:skolio/screens_new/authentication/loginScreen.dart';
+import 'package:skolio/screens_new/mainScreen.dart';
 
 import 'bloc/authenticationBloc.dart';
-import 'screens/mainScreen.dart';
 
-final FirebaseAnalytics _analytics = FirebaseAnalytics();
+// final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   analyticsBloc.logAppStart();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -27,24 +28,49 @@ class MainApp extends StatefulWidget {
   _MainAppState createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MaterialApp(
       navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: _analytics),
+        // FirebaseAnalyticsObserver(analytics: _analytics),
       ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          color: Color.fromRGBO(235, 123, 0, 1),
+          elevation: 0,
+          color: Color.fromRGBO(235, 122, 0, 1),
+          titleTextStyle: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        primaryColor: Color.fromRGBO(235, 123, 0, 1),
+        primaryColor: Color.fromRGBO(235, 122, 0, 1),
         textSelectionTheme: TextSelectionThemeData(
-          cursorColor: Color.fromRGBO(235, 123, 0, 1),
+          cursorColor: Color.fromRGBO(235, 122, 0, 1),
         ),
-        textTheme: TextTheme(
-          headline6: TextStyle(fontSize: 18),
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme.apply(
+                bodyColor: Color.fromRGBO(20, 52, 80, 1),
+                displayColor: Color.fromRGBO(20, 52, 80, 1),
+              ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: InputBorder.none,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            textStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            primary: Color.fromRGBO(235, 122, 0, 1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
         ),
       ),
       home: WillPopScope(
@@ -78,7 +104,7 @@ class _MainAppState extends State<MainApp> {
                   initialData: authenticationBloc.currentUser.value,
                   stream: authenticationBloc.currentUser,
                   builder: (context, snapshot) =>
-                      snapshot.data == null ? StartScreen() : MainScreen(),
+                      snapshot.data == null ? LoginScreen() : MainScreen(),
                 ),
         ),
       ),
@@ -86,8 +112,10 @@ class _MainAppState extends State<MainApp> {
   }
 
   initAsync() async {
-    await Firebase.initializeApp();
     await authenticationBloc.initUser();
     return "Done";
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

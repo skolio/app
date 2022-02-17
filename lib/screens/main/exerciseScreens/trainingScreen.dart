@@ -243,7 +243,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                           Expanded(
                             child: Container(
                               child: Text(
-                                "(Einheit ${currentSet.toString()}/${trainingModel.sets.toString()})",
+                                "(Einheit ${currentSet.toString()}/${trainingModel.repitions.toString()})",
                                 style: TextStyle(fontSize: 20),
                               ),
                             ),
@@ -280,7 +280,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
       return;
     }
     currentSet++;
-    if (currentSet == currentModel.sets) {
+    if (currentSet == currentModel.repitions) {
       authenticationBloc.addTrainingToStats(currentModel.id);
       Navigator.pop(context);
       Navigator.push(

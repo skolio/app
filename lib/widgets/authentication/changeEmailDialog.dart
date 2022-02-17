@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/widgets/authentication/loadingDialog.dart';
-import 'package:skolio/widgets/authentication/ownTextField.dart';
+import 'package:skolio/widgets_new/general/ownTextField.dart';
 import 'package:skolio/widgets/ownSnackBar.dart';
 
 class ChangeEmailDialog extends StatefulWidget {
@@ -37,40 +37,35 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             OwnTextField(
-              controller: _emailController,
-              hintTitle: "E-Mail",
-              obscureText: false,
+              textEditingController: _emailController,
+              hintText: "E-Mail",
+              obscure: false,
             ),
             SizedBox(height: 20),
             OwnTextField(
-              controller: _newEmailController,
-              hintTitle: "Neue E-Mail",
-              obscureText: false,
+              textEditingController: _newEmailController,
+              hintText: "Neue E-Mail",
+              obscure: false,
             ),
             SizedBox(height: 20),
             OwnTextField(
-              controller: _passwordController,
-              hintTitle: "Passwort",
-              obscureText: _passwordObscure,
-              rightWidget: CupertinoButton(
-                child: Icon(
-                  Icons.remove_red_eye_sharp,
-                  color: Colors.grey,
+              textEditingController: _passwordController,
+              hintText: "Passwort",
+              obscure: _passwordObscure,
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              height: 45,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _passwordObscure = !_passwordObscure;
-                  });
-                },
+                child: Text("Speichern"),
+                onPressed: onTapContinue,
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: onTapContinue,
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
-              ),
-              child: Text("SPEICHERN"),
             ),
           ],
         ),

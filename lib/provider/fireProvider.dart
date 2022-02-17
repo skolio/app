@@ -102,7 +102,7 @@ class FireProvider {
           .collection("Statistics")
           .get();
 
-      Map<String, List<String>> statList = {};
+      Map<String, List> statList = {};
 
       statDocs.docs.forEach((element) {
         statList.putIfAbsent(element.id, () => element.data()["record"]);
@@ -122,15 +122,18 @@ class FireProvider {
           "userModel": userModel,
         },
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (e is FirebaseException)
         return ResponseModel(e.code, arguments: {
           "message": getFirebaseErrorMessage(e.code),
         });
-      else
+      else {
+        print(e.toString());
+        print(stackTrace);
         return ResponseModel("404", arguments: {
-          "message": getFirebaseErrorMessage(e.code),
+          "message": getFirebaseErrorMessage(""),
         });
+      }
     }
   }
 
@@ -157,7 +160,13 @@ class FireProvider {
       analyticsBloc.logRegisterFinished();
       // _auth.signOut();
 
-      return ResponseModel("200");
+      return ResponseModel(
+        "200",
+        arguments: {
+          "message":
+              "Wir haben die eine E-Mail geschickt. Bitte verifiziere deine E-Mailadresse und logge dich danach bei Skolio ein.",
+        },
+      );
     } catch (e) {
       if (e is FirebaseException)
         return ResponseModel(e.code, arguments: {
@@ -226,6 +235,11 @@ class FireProvider {
     }
   }
 
+  forgotPassword(String email) {
+    _auth.setLanguageCode("de");
+    _auth.sendPasswordResetEmail(email: email);
+  }
+
   String getFirebaseErrorMessage(String code) {
     switch (code) {
       case "invalid-email":
@@ -251,25 +265,44 @@ class FireProvider {
     _auth.signOut();
   }
 
-  deleteUser() async {
-    final ownTrainingDocs = await _store
-        .collection("OwnTraining")
-        .where("uid", isEqualTo: _auth.currentUser.uid)
-        .get();
+  deleteUser(String email, String password) async {
+    try {
+      final result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
 
-    if (ownTrainingDocs.size != 0) {
-      ownTrainingDocs.docs.forEach((element) {
-        Map data = element.data();
-        data["imageURLs"].forEach((e) {
-          _storage.refFromURL(e).delete();
+      final ownTrainingDocs = await _store
+          .collection("OwnTraining")
+          .where("uid", isEqualTo: _auth.currentUser.uid)
+          .get();
+
+      if (ownTrainingDocs.size != 0) {
+        ownTrainingDocs.docs.forEach((element) {
+          Map data = element.data();
+          data["imageURLs"].forEach((e) {
+            if (e.contains("https://")) _storage.refFromURL(e).delete();
+          });
+          _store.collection("OwnTraining").doc(element.id).delete();
         });
-        _store.collection("OwnTraining").doc(element.id).delete();
-      });
+      }
+
+      _store.collection("Users").doc(_auth.currentUser.uid).delete();
+
+      result.user.delete();
+
+      return ResponseModel("200");
+    } catch (e, stackTrace) {
+      if (e is FirebaseException)
+        return ResponseModel(e.code, arguments: {
+          "message": getFirebaseErrorMessage(e.code),
+        });
+      else {
+        print(e.toString());
+        print(stackTrace);
+        return ResponseModel("404", arguments: {
+          "message": getFirebaseErrorMessage(""),
+        });
+      }
     }
-
-    _store.collection("Users").doc(_auth.currentUser.uid).delete();
-
-    _auth.currentUser.delete();
   }
 
   setOrderOfTrainingPlan(List<String> trainingPlanOrder) {
@@ -286,19 +319,21 @@ class FireProvider {
         .where("uid", isEqualTo: _auth.currentUser.uid)
         .get();
 
-    print(ownTrainingListResult.size);
-    ownTrainingListResult.docs.forEach((element) {
-      print(element.data()["title"]);
-    });
+    ownTrainingListResult.docs.forEach((element) {});
 
     List<Map> returnList = [];
 
     if (trainingListResult.size != 0)
-      returnList.addAll(trainingListResult.docs.map((e) => e.data()).toList());
+      returnList.addAll(
+        trainingListResult.docs
+            .map((e) => e.data()..putIfAbsent("editable", () => false))
+            .toList(),
+      );
 
     if (ownTrainingListResult.size != 0) {
-      returnList
-          .addAll(ownTrainingListResult.docs.map((e) => e.data()).toList());
+      returnList.addAll(ownTrainingListResult.docs
+          .map((e) => e.data()..putIfAbsent("editable", () => true))
+          .toList());
     }
 
     if (returnList.length == 0) {
@@ -352,7 +387,7 @@ class FireProvider {
 
   deleteTraining(String id) {
     analyticsBloc.logTrainingDelete();
-    _store.collection("Training").doc(id).delete();
+    _store.collection("OwnTraining").doc(id).delete();
   }
 
   addTrainingToPlan(String trainingID) {

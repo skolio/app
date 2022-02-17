@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
+import 'package:skolio/widgets/ownSnackBar.dart';
+import 'package:skolio/widgets_new/general/ownTextField.dart';
 
 class DeleteDialog extends StatefulWidget {
   @override
@@ -7,6 +10,9 @@ class DeleteDialog extends StatefulWidget {
 }
 
 class _DeleteDialogState extends State<DeleteDialog> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -28,34 +34,74 @@ class _DeleteDialogState extends State<DeleteDialog> {
           children: [
             Text(
               "Willst du wirklich deinen Account löschen?",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox(height: 20),
+            Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                  ),
-                  child: Text("NEIN"),
+                OwnTextField(
+                  textEditingController: _emailController,
+                  hintText: "E-Mail",
+                  obscure: false,
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    await authenticationBloc.deleteUser();
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
+                SizedBox(height: 20),
+                OwnTextField(
+                  textEditingController: _passwordController,
+                  hintText: "Passwort",
+                  obscure: true,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text("Ja"),
+                    onPressed: () async {
+                      final response = await authenticationBloc.deleteUser(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                      Navigator.pop(context);
+                      if (response.code != "200") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          getSnackBar(
+                            context,
+                            response.arguments["message"],
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  child: Text("JA"),
+                ),
+                SizedBox(height: 15),
+                Container(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text("Nein"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               ],
             ),

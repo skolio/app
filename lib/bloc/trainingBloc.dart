@@ -14,6 +14,8 @@ class TrainingBloc {
   fetchTrainingList() async {
     final response = await _trainingRepo.fetchTrainingList();
 
+    _trainingListFetcher.sink.add(null);
+
     if (response.code == "200") {
       _trainingListFetcher.sink.add(response.arguments["trainingList"]);
     } else {

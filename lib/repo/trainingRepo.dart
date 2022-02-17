@@ -13,6 +13,8 @@ class TrainingRepo {
   Future<ResponseModel> fetchTrainingList() async {
     final fireResponse = await _fireProvider.fetchTrainingList();
 
+    trainingList.clear();
+
     if (fireResponse.code == "200") {
       final temporaryList = <TrainingModel>[];
 
@@ -37,7 +39,6 @@ class TrainingRepo {
             temporaryList.indexWhere((e) => e.id == element) == -1);
 
       if (orderList != null && orderList.isNotEmpty) {
-        print("This is from the OrderList ${orderList.length}");
         for (int i = 0; i < orderList.length; i++) {
           if (trainingList.isEmpty)
             trainingList.add(
@@ -54,16 +55,12 @@ class TrainingRepo {
             i--;
           }
         }
-        print("This is the TemporaryList ${temporaryList.length}");
-        print("The Length of the TrainingList ${trainingList.length}");
 
         trainingList.addAll(
           temporaryList.where(
             (element) => !orderList.contains(element.id),
           ),
         );
-
-        print("The Length of the TrainingList ${trainingList.length}");
 
         _sharedProvider.setOrderOfTrainingList(
           List<String>.from(trainingList.map((e) => e.id).toList()),
@@ -74,8 +71,6 @@ class TrainingRepo {
           List<String>.from(trainingList.map((e) => e.id).toList()),
         );
       }
-
-      print(trainingList.length);
 
       return ResponseModel("200", arguments: {
         "trainingList": trainingList,
@@ -98,8 +93,6 @@ class TrainingRepo {
         i--;
       }
     }
-
-    //TODO add the Rest of the trainingList that wasnt added to the order
 
     _sharedProvider.setOrderOfTrainingList(trainingListOrder);
 
