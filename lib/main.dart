@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:skolio/bloc/analyitcsBloc.dart';
-import 'package:skolio/screens/loadingScreen.dart';
+import 'package:skolio/screens_new/loadingScreen.dart';
 import 'package:skolio/screens_new/authentication/loginScreen.dart';
 import 'package:skolio/screens_new/mainScreen.dart';
 

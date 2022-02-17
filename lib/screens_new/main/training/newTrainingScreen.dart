@@ -13,9 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/screens/main/cameraScreen.dart';
-import 'package:skolio/widgets/authentication/loadingDialog.dart';
-import 'package:skolio/widgets/ownSnackBar.dart';
+import 'package:skolio/screens_new/main/training/cameraScreen.dart';
+import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
+import 'package:skolio/widgets_new/ownSnackBar.dart';
 
 class NewTrainingScreen extends StatefulWidget {
   final TrainingModel trainingModel;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
-import 'package:skolio/widgets/ownSnackBar.dart';
+import 'package:skolio/widgets_new/ownSnackBar.dart';
 import 'package:skolio/widgets_new/general/ownTextField.dart';
 
 class DeleteDialog extends StatefulWidget {

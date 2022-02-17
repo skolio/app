@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
-import 'package:skolio/screens/main/dataPrivacyScreen.dart';
-import 'package:skolio/screens/main/imprintScreen.dart';
-import 'package:skolio/widgets/authentication/changeEmailDialog.dart';
-import 'package:skolio/widgets/authentication/changePasswordDialog.dart';
-import 'package:skolio/widgets/authentication/deleteDialog.dart';
+import 'package:skolio/screens_new/main/settings/dataPrivacyScreen.dart';
+import 'package:skolio/screens_new/main/settings/imprintScreen.dart';
+import 'package:skolio/widgets_new/authentication/changeEmailDialog.dart';
+import 'package:skolio/widgets_new/authentication/changePasswordDialog.dart';
+import 'package:skolio/widgets_new/authentication/deleteDialog.dart';
 import 'package:skolio/widgets_new/main/account/logOutDialog.dart';
 import 'package:skolio/widgets_new/main/account/overviewItem.dart';
 

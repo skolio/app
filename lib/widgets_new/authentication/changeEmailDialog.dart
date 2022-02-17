@@ -1,22 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
-import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
 import 'package:skolio/widgets_new/general/ownTextField.dart';
-import 'package:skolio/widgets/ownSnackBar.dart';
+import 'package:skolio/widgets_new/ownSnackBar.dart';
 
-class ChangePasswordDialog extends StatefulWidget {
+class ChangeEmailDialog extends StatefulWidget {
   @override
-  _ChangePasswordDialogState createState() => _ChangePasswordDialogState();
+  _ChangeEmailDialogState createState() => _ChangeEmailDialogState();
 }
 
-class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
+class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
   final _emailController = TextEditingController();
+  final _newEmailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
 
   bool _passwordObscure = true;
-  bool _newPasswordObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,12 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 20,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -39,15 +43,15 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             ),
             SizedBox(height: 20),
             OwnTextField(
-              textEditingController: _passwordController,
-              hintText: "Passwort",
-              obscure: _passwordObscure,
+              textEditingController: _newEmailController,
+              hintText: "Neue E-Mail",
+              obscure: false,
             ),
             SizedBox(height: 20),
             OwnTextField(
-              textEditingController: _newPasswordController,
-              hintText: "Neues Passwort",
-              obscure: _newPasswordObscure,
+              textEditingController: _passwordController,
+              hintText: "Passwort",
+              obscure: _passwordObscure,
             ),
             SizedBox(height: 20),
             Container(
@@ -71,17 +75,17 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
   onTapContinue() async {
     if (_emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _newPasswordController.text.isEmpty) {
+        _newEmailController.text.isEmpty ||
+        _passwordController.text.isEmpty) {
       return;
     }
 
     showDialog(context: context, builder: (context) => LoadingDialog());
 
-    final response = await authenticationBloc.changePassword(
+    final response = await authenticationBloc.changeEmail(
       _emailController.text,
+      _newEmailController.text,
       _passwordController.text,
-      _newPasswordController.text,
     );
 
     Navigator.pop(context);
@@ -92,13 +96,6 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         getSnackBar(
           context,
           response.arguments["message"],
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        getSnackBar(
-          context,
-          "Dein Passwort wurde geändert.",
         ),
       );
     }
