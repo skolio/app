@@ -8,6 +8,7 @@ class TrainingModel {
   int sets;
   int repitions;
   Duration pauseBetween;
+  bool editable;
 
   TrainingModel.fromMap(Map data) {
     id = data["id"];
@@ -15,10 +16,11 @@ class TrainingModel {
     title = data["title"];
     description = data["description"];
     imageURLs = List<String>.from(data["imageURLs"]);
-    imageTitle = List<String>.from(data["imageTitle"]);
+    // imageTitle = List<String>.from(data["imageTitle"]);
     sets = data["sets"];
     repitions = data["repitions"];
     pauseBetween = parseDuration(data["pauseBetween"]);
+    editable = data["editable"];
   }
 
   Map<String, dynamic> get asMap => {
@@ -27,7 +29,7 @@ class TrainingModel {
         "title": title,
         "description": description,
         "imageURLs": imageURLs,
-        "imageTitle": imageTitle,
+        // "imageTitle": imageTitle,
         "sets": sets,
         "repitions": repitions,
         "pauseBetween": pauseBetween.toString(),

@@ -11,6 +11,26 @@ class _DataPrivacyScreenState extends State<DataPrivacyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          "Datenschutz",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyText1.color,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 18,
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Html(
           data: """

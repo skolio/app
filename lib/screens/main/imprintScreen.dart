@@ -10,6 +10,26 @@ class _ImprintScreenState extends State<ImprintScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          "Impressum",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyText1.color,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 18,
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(

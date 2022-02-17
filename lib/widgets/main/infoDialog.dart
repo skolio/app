@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InfoDialog extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _InfoDialogState extends State<InfoDialog> {
             20,
           ),
         ),
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -27,15 +28,17 @@ class _InfoDialogState extends State<InfoDialog> {
               margin: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 "Skolio ist eine Anwendung zur Unterstützung Deiner Skoliose-Therapie. Das Training mit Skolio sollte nur nach Anleitung durch einen geschulten Therapeuten erfolgen.",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black.withOpacity(0.8),
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             SizedBox(
-              height: 30,
+              height: 45,
+              width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).primaryColor,

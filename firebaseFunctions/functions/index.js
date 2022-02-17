@@ -34,9 +34,9 @@ exports.sendVerificationEmail = functions.auth.user().onCreate((user) => {
         subject: "Bestätige deinen Account",
         html: `
         Herzlich Willkommen bei Skolio,
-
-        wir freuen uns, dass Du Dich bei Skolio registrieren möchtest. Um Deine Registrierung abzuschließen, klicke bitte auf diesen Link: https://us-central1-skolio-fa10e.cloudfunctions.net/verifyUser?id=${user.uid}
-    
+        <br>
+        wir freuen uns, dass Du Dich bei Skolio registrieren möchtest. Um Deine Registrierung abzuschließen, klicke bitte auf diesen <a href="https://us-central1-skolio-fa10e.cloudfunctions.net/verifyUser?id=${user.uid}">Link</a>
+        <br>
         Dein Skolio-Team`,
     })
 
@@ -51,7 +51,7 @@ exports.verifyUser = functions.https.onRequest(async (req, res) => {
         <html>
             <center>
                 <img src="https://firebasestorage.googleapis.com/v0/b/skolio-fa10e.appspot.com/o/Logo.png?alt=media&token=8ed11828-4dbc-48d8-9107-2d725cb47001" alt="Logo"></img>
-                <h3>Dein Account wurde erfolgreich Verifiziert!</h3>
+                <h3>Dein Account wurde erfolgreich verifiziert!</h3>
             </center>    
         </html>
     `)

@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AnalyticsBloc {
-  final _instance = FirebaseAnalytics();
+  final _instance = FirebaseAnalytics.instance;
 
   logAppStart() {
     _instance.logEvent(name: "open_app");

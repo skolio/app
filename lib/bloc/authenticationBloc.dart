@@ -3,7 +3,6 @@ import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/userModel.dart';
 import 'package:skolio/provider/fireProvider.dart';
-import 'package:skolio/provider/sharedProvider.dart';
 
 import '../model/responseModel.dart';
 
@@ -60,6 +59,8 @@ class AuthenticationBloc {
           String email, String password, String newPassword) async =>
       _fireProvider.changePassword(email, password, newPassword);
 
+  forgotPassword(String email) => _fireProvider.forgotPassword(email);
+
   signOutUser() {
     _userFetcher.sink.add(null);
     _fireProvider.signOut();
@@ -91,6 +92,7 @@ class AuthenticationBloc {
 
   addTrainingToStats(String id) async {
     UserModel userModel = _userFetcher.value;
+    _userFetcher.sink.add(null);
     if (userModel.statistic[DateTime.now().toString().split(" ").first] !=
         null) {
       userModel.statistic[DateTime.now().toString().split(" ").first].add(id);
@@ -98,12 +100,13 @@ class AuthenticationBloc {
       userModel.statistic[DateTime.now().toString().split(" ")] = [id];
     }
     await _fireProvider.addTrainingToStats(id);
+    print("We are doing something here right now");
+    // _userFetcher.sink.add(userModel);
     initUser();
-    _userFetcher.sink.add(userModel);
   }
 
-  deleteUser() async {
-    await _fireProvider.deleteUser();
+  deleteUser(String email, String password) async {
+    await _fireProvider.deleteUser(email, password);
     trainingBloc.deleteUser();
     _userFetcher.sink.add(null);
   }
