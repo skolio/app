@@ -1,10 +1,10 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:skolio/screens_new/main/training/startTrainingScreen.dart';
-import 'package:skolio/screens_new/main/training/trainingPlanScreen.dart';
-import 'package:skolio/widgets_new/general/halfCircleWidget.dart';
-import 'package:skolio/widgets_new/main/mainScreenItem.dart';
+import 'package:skolio/screens/main/training/startTrainingScreen.dart';
+import 'package:skolio/screens/main/training/trainingPlanScreen.dart';
+import 'package:skolio/widgets/general/halfCircleWidget.dart';
+import 'package:skolio/widgets/main/mainScreenItem.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override

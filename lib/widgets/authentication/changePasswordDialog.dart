@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
-import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
-import 'package:skolio/widgets_new/general/ownTextField.dart';
-import 'package:skolio/widgets_new/ownSnackBar.dart';
+import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets/general/ownTextField.dart';
+import 'package:skolio/widgets/ownSnackBar.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   @override

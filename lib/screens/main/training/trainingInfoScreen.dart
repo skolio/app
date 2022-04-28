@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/screens_new/main/training/newTrainingScreen.dart';
+import 'package:skolio/screens/main/training/newTrainingScreen.dart';
 
 class TrainingInfoScreen extends StatefulWidget {
   final TrainingModel trainingModel;
@@ -141,7 +141,7 @@ class _TrainingInfoScreenState extends State<TrainingInfoScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    _trainingModel.repitions.toString(),
+                                    _trainingModel.repititions.toString(),
                                     style: GoogleFonts.poppins(
                                       fontSize: 18,
                                       color: Theme.of(context).primaryColor,

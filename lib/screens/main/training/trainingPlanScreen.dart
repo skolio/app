@@ -2,8 +2,9 @@ import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
-import 'package:skolio/screens_new/main/training/newTrainingScreen.dart';
-import 'package:skolio/widgets_new/main/training/trainingIconListItem.dart';
+import 'package:skolio/screens/main/training/audioTraining/newTrainingAudioScreen.dart';
+import 'package:skolio/screens/main/training/newTrainingScreen.dart';
+import 'package:skolio/widgets/main/training/trainingIconListItem.dart';
 
 class TrainingPlanScreen extends StatefulWidget {
   @override
@@ -88,7 +89,7 @@ class _TrainingPlanScreenState extends State<TrainingPlanScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NewTrainingScreen(null, null),
+                    builder: (context) => NewTrainingAudioScreen(null, null),
                   ),
                 );
               },

@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
-import 'package:skolio/screens_new/authentication/registerScreen.dart';
-import 'package:skolio/screens_new/mainScreen.dart';
-import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
-import 'package:skolio/widgets_new/main/infoDialog.dart';
-import 'package:skolio/widgets_new/ownSnackBar.dart';
-import 'package:skolio/widgets_new/general/ownTextField.dart';
-import 'package:skolio/widgets_new/general/halfCircleWidget.dart';
-import 'package:skolio/widgets_new/general/scrollBehavior.dart';
+import 'package:skolio/screens/authentication/registerScreen.dart';
+import 'package:skolio/screens/mainScreen.dart';
+import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets/main/infoDialog.dart';
+import 'package:skolio/widgets/ownSnackBar.dart';
+import 'package:skolio/widgets/general/ownTextField.dart';
+import 'package:skolio/widgets/general/halfCircleWidget.dart';
+import 'package:skolio/widgets/general/scrollBehavior.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

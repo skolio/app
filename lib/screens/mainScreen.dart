@@ -4,12 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/navigatorBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
-import 'package:skolio/screens_new/main/dashboardScreen.dart';
-import 'package:skolio/screens_new/main/accountScreen.dart';
-import 'package:skolio/screens_new/main/resultScreen.dart';
+import 'package:skolio/screens/main/dashboardScreen.dart';
+import 'package:skolio/screens/main/accountScreen.dart';
+import 'package:skolio/screens/main/resultScreen.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:skolio/screens_new/main/training/startTrainingScreen.dart';
-import 'package:skolio/screens_new/main/training/trainingPlanScreen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen();
@@ -180,7 +178,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           if (snapshot.data == null)
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             );
           return IndexedStack(

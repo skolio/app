@@ -13,9 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/screens_new/main/training/cameraScreen.dart';
-import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
-import 'package:skolio/widgets_new/ownSnackBar.dart';
+import 'package:skolio/screens/main/training/cameraScreen.dart';
+import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets/ownSnackBar.dart';
 
 class NewTrainingScreen extends StatefulWidget {
   final TrainingModel trainingModel;
@@ -44,7 +44,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
       _titleController.text = widget.trainingModel.title;
       _descriptionController.text = widget.trainingModel.description;
       _sets = widget.trainingModel.sets;
-      _repititions = widget.trainingModel.repitions;
+      _repititions = widget.trainingModel.repititions;
       _imageURLs.addAll(widget.trainingModel.imageURLs);
       _duration = widget.trainingModel.pauseBetween.inMinutes.toString() +
           ":" +

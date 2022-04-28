@@ -1,5 +1,7 @@
 import 'package:skolio/model/responseModel.dart';
+import 'package:skolio/model/trainingAudioModel.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/model/trainingModelInterface.dart';
 import 'package:skolio/provider/fireProvider.dart';
 import 'package:skolio/provider/sharedProvider.dart';
 
@@ -7,8 +9,8 @@ class TrainingRepo {
   final _fireProvider = FireProvider();
   final _sharedProvider = SharedProvider();
 
-  List<TrainingModel> trainingList = [];
-  List<TrainingModel> trainingPlan = [];
+  List<TrainingModelInterface> trainingList = [];
+  List<TrainingModelInterface> trainingPlan = [];
 
   Future<ResponseModel> fetchTrainingList() async {
     final fireResponse = await _fireProvider.fetchTrainingList();
@@ -16,13 +18,16 @@ class TrainingRepo {
     trainingList.clear();
 
     if (fireResponse.code == "200") {
-      final temporaryList = <TrainingModel>[];
+      final temporaryList = <TrainingModelInterface>[];
 
       temporaryList.addAll(
-        List<TrainingModel>.from(
-          fireResponse.arguments["trainingList"]
-              .map((e) => TrainingModel.fromMap(e))
-              .toList(),
+        List<TrainingModelInterface>.from(
+          fireResponse.arguments["trainingList"].map((e) {
+            if ((e as Map).containsKey("description"))
+              return TrainingModel.fromMap(e);
+            else
+              return TrainingAudioModel.fromMap(e);
+          }).toList(),
         ),
       );
 
@@ -81,7 +86,7 @@ class TrainingRepo {
 
   Future<ResponseModel> changeTrainingListOrder(
       List<String> trainingListOrder) async {
-    final orderedTrainingList = <TrainingModel>[];
+    final orderedTrainingList = <TrainingModelInterface>[];
 
     for (int i = 0; i < trainingListOrder.length; i++) {
       if (trainingList.indexWhere((e) => e.id == trainingListOrder[i]) != -1) {
@@ -108,11 +113,11 @@ class TrainingRepo {
     );
   }
 
-  TrainingModel fetchTrainingModel(String id) =>
+  TrainingModelInterface fetchTrainingModel(String id) =>
       trainingList.firstWhere((element) => element.id == id);
 
   Future<ResponseModel> addOwnTraining(
-      TrainingModel trainingModel, bool uploadToCloud) async {
+      TrainingModelInterface trainingModel, bool uploadToCloud) async {
     final response =
         await _fireProvider.addOwnTraining(trainingModel, uploadToCloud);
 
@@ -125,7 +130,7 @@ class TrainingRepo {
     return response;
   }
 
-  editTraining(TrainingModel trainingModel, bool uploadToCloud) async {
+  editTraining(TrainingModelInterface trainingModel, bool uploadToCloud) async {
     final trainingListIndex = trainingList.indexWhere(
       (model) => model.id == trainingModel.id,
     );
@@ -152,14 +157,14 @@ class TrainingRepo {
     return trainingList;
   }
 
-  List<TrainingModel> addTrainingToPlan(String trainingID) {
+  List<TrainingModelInterface> addTrainingToPlan(String trainingID) {
     trainingPlan
         .add(trainingList.firstWhere((element) => element.id == trainingID));
 
     return trainingPlan;
   }
 
-  List<TrainingModel> removeTrainingFromPlan(String trainingID) {
+  List<TrainingModelInterface> removeTrainingFromPlan(String trainingID) {
     trainingPlan.removeWhere((element) => element.id == trainingID);
 
     return trainingPlan;

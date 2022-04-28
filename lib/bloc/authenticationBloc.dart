@@ -97,7 +97,7 @@ class AuthenticationBloc {
         null) {
       userModel.statistic[DateTime.now().toString().split(" ").first].add(id);
     } else {
-      userModel.statistic[DateTime.now().toString().split(" ")] = [id];
+      // userModel.statistic[DateTime.now().toString().split(" ").first] = [id];
     }
     await _fireProvider.addTrainingToStats(id);
     print("We are doing something here right now");

@@ -1,12 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/screens_new/main/training/trainingInfoScreen.dart';
+import 'package:skolio/model/trainingModelInterface.dart';
+import 'package:skolio/screens/main/training/audioTraining/trainingAudioInfoScreen.dart';
+import 'package:skolio/screens/main/training/trainingInfoScreen.dart';
 
 class TrainingIconListItem extends StatefulWidget {
-  final TrainingModel trainingModel;
+  final TrainingModelInterface trainingModel;
   final bool selected;
   final Function(bool) onTap;
 
@@ -37,7 +40,9 @@ class _TrainingIconListItemState extends State<TrainingIconListItem> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TrainingInfoScreen(widget.trainingModel),
+          builder: (context) => widget.trainingModel is TrainingModel
+              ? TrainingInfoScreen(widget.trainingModel)
+              : TrainingAudioInfoScreen(widget.trainingModel),
         ),
       ),
       child: AnimatedContainer(
@@ -113,10 +118,15 @@ class _TrainingIconListItemState extends State<TrainingIconListItem> {
             ),
             Container(
               width: 70,
-              child: SvgPicture.asset(
-                "assets/icons/meditate.svg",
-                fit: BoxFit.cover,
-              ),
+              child: widget.trainingModel.iconURL.isEmpty
+                  ? SvgPicture.asset(
+                      "assets/icons/meditate.svg",
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: widget.trainingModel.iconURL,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(width: 10),
             Expanded(

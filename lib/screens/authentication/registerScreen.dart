@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/model/userModel.dart';
-import 'package:skolio/widgets_new/authentication/loadingDialog.dart';
-import 'package:skolio/widgets_new/main/emailVerificationDialog.dart';
-import 'package:skolio/widgets_new/general/halfCircleWidget.dart';
-import 'package:skolio/widgets_new/general/ownTextField.dart';
-import 'package:skolio/widgets_new/general/scrollBehavior.dart';
+import 'package:skolio/widgets/authentication/loadingDialog.dart';
+import 'package:skolio/widgets/main/emailVerificationDialog.dart';
+import 'package:skolio/widgets/general/halfCircleWidget.dart';
+import 'package:skolio/widgets/general/ownTextField.dart';
+import 'package:skolio/widgets/general/scrollBehavior.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override

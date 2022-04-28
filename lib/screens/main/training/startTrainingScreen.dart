@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/screens_new/main/training/preTrainingScreen.dart';
-import 'package:skolio/widgets_new/general/halfCircleWidget.dart';
-import 'package:skolio/widgets_new/general/scrollBehavior.dart';
-import 'package:skolio/widgets_new/main/training/trainingImageListItem.dart';
+import 'package:skolio/screens/main/training/preTrainingScreen.dart';
+import 'package:skolio/widgets/general/halfCircleWidget.dart';
+import 'package:skolio/widgets/general/scrollBehavior.dart';
+import 'package:skolio/widgets/main/training/trainingImageListItem.dart';
 
 class StartTrainingScreen extends StatefulWidget {
   @override

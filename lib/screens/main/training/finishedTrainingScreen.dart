@@ -3,9 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skolio/bloc/navigatorBloc.dart';
 import 'package:skolio/main.dart';
-import 'package:skolio/screens_new/main/training/trainingScreen.dart';
-import 'package:skolio/screens_new/mainScreen.dart';
-import 'package:skolio/widgets_new/general/halfCircleWidget.dart';
+import 'package:skolio/screens/main/training/trainingScreen.dart';
+import 'package:skolio/screens/mainScreen.dart';
+import 'package:skolio/widgets/general/halfCircleWidget.dart';
 
 class FinishedTrainingScreen extends StatefulWidget {
   final bool finishedTrainingPlan;

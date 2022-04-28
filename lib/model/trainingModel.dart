@@ -1,12 +1,22 @@
-class TrainingModel {
+import 'package:skolio/model/trainingModelInterface.dart';
+
+class TrainingModel implements TrainingModelInterface {
+  @override
   String id;
+  @override
   String uid;
+  @override
   String title;
-  String description;
+  @override
+  String iconURL;
+  @override
   List<String> imageURLs;
+  @override
+  int repititions;
+
+  String description;
   List<String> imageTitle;
   int sets;
-  int repitions;
   Duration pauseBetween;
   bool editable;
 
@@ -14,11 +24,13 @@ class TrainingModel {
     id = data["id"];
     uid = data["uid"] ?? "";
     title = data["title"];
-    description = data["description"];
+    iconURL = data["iconURL"] ?? "";
     imageURLs = List<String>.from(data["imageURLs"]);
+    repititions = data["repitions"];
+
+    description = data["description"];
     // imageTitle = List<String>.from(data["imageTitle"]);
     sets = data["sets"];
-    repitions = data["repitions"];
     pauseBetween = parseDuration(data["pauseBetween"]);
     editable = data["editable"];
   }
@@ -27,11 +39,12 @@ class TrainingModel {
         "id": id,
         "uid": uid,
         "title": title,
-        "description": description,
+        "iconURL": iconURL,
         "imageURLs": imageURLs,
+        "repitions": repititions,
+        "description": description,
         // "imageTitle": imageTitle,
         "sets": sets,
-        "repitions": repitions,
         "pauseBetween": pauseBetween.toString(),
       };
 

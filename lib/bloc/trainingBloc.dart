@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:skolio/model/responseModel.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/model/trainingModelInterface.dart';
 import 'package:skolio/repo/trainingRepo.dart';
 
 class TrainingBloc {
@@ -31,7 +32,7 @@ class TrainingBloc {
   }
 
   Future<ResponseModel> addOwnTraining(
-      TrainingModel trainingModel, bool uploadToCloud) async {
+      TrainingModelInterface trainingModel, bool uploadToCloud) async {
     final result =
         await _trainingRepo.addOwnTraining(trainingModel, uploadToCloud);
     if (result.code == "200") {
@@ -42,7 +43,7 @@ class TrainingBloc {
   }
 
   Future<ResponseModel> editTraining(
-      TrainingModel trainingModel, bool uploadToCloud) async {
+      TrainingModelInterface trainingModel, bool uploadToCloud) async {
     final response =
         await _trainingRepo.editTraining(trainingModel, uploadToCloud);
 
@@ -55,7 +56,7 @@ class TrainingBloc {
     _trainingListFetcher.sink.add(_trainingRepo.deleteTraining(id));
   }
 
-  TrainingModel fetchTrainingModel(String id) =>
+  TrainingModelInterface fetchTrainingModel(String id) =>
       _trainingRepo.fetchTrainingModel(id);
 
   deleteUser() {

@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:skolio/bloc/analyitcsBloc.dart';
 import 'package:skolio/model/responseModel.dart';
+import 'package:skolio/model/trainingAudioModel.dart';
 import 'package:skolio/model/trainingModel.dart';
+import 'package:skolio/model/trainingModelInterface.dart';
 import 'package:skolio/model/userModel.dart';
 import 'package:skolio/provider/sharedProvider.dart';
 import '../model/responseModel.dart';
@@ -313,9 +315,15 @@ class FireProvider {
 
   Future<ResponseModel> fetchTrainingList() async {
     final trainingListResult = await _store.collection("Training").get();
+    final newTrainingListResult = await _store.collection("NewTraining").get();
 
     final ownTrainingListResult = await _store
         .collection("OwnTraining")
+        .where("uid", isEqualTo: _auth.currentUser.uid)
+        .get();
+
+    final newOwnTrainingListResult = await _store
+        .collection("NewOwnTraining")
         .where("uid", isEqualTo: _auth.currentUser.uid)
         .get();
 
@@ -330,11 +338,24 @@ class FireProvider {
             .toList(),
       );
 
-    if (ownTrainingListResult.size != 0) {
+    if (newTrainingListResult.size != 0)
+      returnList.addAll(
+        newTrainingListResult.docs
+            .map((e) => e.data()..putIfAbsent("editable", () => false))
+            .toList(),
+      );
+
+    if (ownTrainingListResult.size != 0)
       returnList.addAll(ownTrainingListResult.docs
           .map((e) => e.data()..putIfAbsent("editable", () => true))
           .toList());
-    }
+
+    if (newOwnTrainingListResult.size != 0)
+      returnList.addAll(
+        newOwnTrainingListResult.docs
+            .map((e) => e.data()..putIfAbsent("editable", () => true))
+            .toList(),
+      );
 
     if (returnList.length == 0) {
       return ResponseModel("404");
@@ -370,7 +391,7 @@ class FireProvider {
     return ResponseModel("200");
   }
 
-  editTraining(TrainingModel trainingModel, bool uploadToCloud) async {
+  editTraining(TrainingModelInterface trainingModel, bool uploadToCloud) async {
     for (int i = 0; i < trainingModel.imageURLs.length; i++) {
       if (uploadToCloud) {
         if (!trainingModel.imageURLs[i].contains("https://")) {
@@ -379,15 +400,26 @@ class FireProvider {
         }
       }
     }
-    _store
-        .collection("OwnTraining")
-        .doc(trainingModel.id)
-        .update(trainingModel.asMap);
+
+    if (trainingModel is TrainingModel)
+      _store
+          .collection("OwnTraining")
+          .doc(trainingModel.id)
+          .update(trainingModel.asMap);
+    else if (trainingModel is TrainingAudioModel)
+      _store
+          .collection("NewOwnTraining")
+          .doc(trainingModel.id)
+          .update(trainingModel.asMap);
   }
 
-  deleteTraining(String id) {
+  deleteTraining(String id) async {
     analyticsBloc.logTrainingDelete();
-    _store.collection("OwnTraining").doc(id).delete();
+    final doc = await _store.collection("OwnTraining").doc(id).get();
+    if (doc.exists) {
+      _store.collection("OwnTraining").doc(id).delete();
+    } else
+      _store.collection("NewOwnTraining").doc(id).delete();
   }
 
   addTrainingToPlan(String trainingID) {

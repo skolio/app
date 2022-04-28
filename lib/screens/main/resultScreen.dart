@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:skolio/bloc/authenticationBloc.dart';
 import 'package:skolio/bloc/trainingBloc.dart';
 import 'package:skolio/model/trainingModel.dart';
-import 'package:skolio/widgets_new/main/result/calendarPicker.dart';
+import 'package:skolio/model/trainingModelInterface.dart';
+import 'package:skolio/widgets/main/result/calendarPicker.dart';
 
 class ResultScreen extends StatefulWidget {
   @override
@@ -86,7 +87,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         child: ListView.builder(
                           itemCount: ids.length,
                           itemBuilder: (context, index) {
-                            final TrainingModel trainingModel =
+                            final TrainingModelInterface trainingModel =
                                 trainingBloc.fetchTrainingModel(
                               ids[index],
                             );
